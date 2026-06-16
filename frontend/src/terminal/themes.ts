@@ -1,5 +1,7 @@
-// Palettes du terminal. Chaque thème mappe les variables CSS utilisées dans style.css.
-export const themes = {
+// Palettes du terminal. Chaque thème mappe les variables CSS utilisées dans le composant.
+export type Theme = Record<string, string>
+
+export const themes: Record<string, Theme> = {
   github: {
     '--bg': '#0d1117', '--bg-bar': '#161b22', '--fg': '#c9d1d9', '--dim': '#8b949e',
     '--accent': '#7ee787', '--prompt': '#58a6ff', '--path': '#a371f7', '--link': '#79c0ff',
@@ -25,7 +27,7 @@ export const themes = {
 export const themeNames = Object.keys(themes)
 const STORAGE_KEY = 'portfolio-theme'
 
-export function applyTheme(name) {
+export function applyTheme(name: string): boolean {
   const theme = themes[name]
   if (!theme) return false
   for (const [key, value] of Object.entries(theme)) {
@@ -35,11 +37,12 @@ export function applyTheme(name) {
   return true
 }
 
-export function loadTheme() {
+export function loadTheme(): string {
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved && themes[saved]) {
     applyTheme(saved)
     return saved
   }
+  applyTheme('github')
   return 'github'
 }

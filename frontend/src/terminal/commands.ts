@@ -1,15 +1,30 @@
-import { profile, about, skills, projects, experience } from './portfolio.js'
-import { themeNames } from './themes.js'
+import { profile, about, skills, projects, experience } from '../portfolio'
+import { themeNames } from './themes'
 
-// Helpers de mise en forme. Chaque commande renvoie un tableau de lignes HTML.
-// Le contenu est statique (le nôtre) — pas d'injection de saisie utilisateur ici.
-const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))
-const link = (url, label) => `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label || url)}</a>`
-const dim = (s) => `<span class="dim">${esc(s)}</span>`
-const accent = (s) => `<span class="accent">${esc(s)}</span>`
-const ok = (s) => `<span class="ok">${esc(s)}</span>`
+// Une commande renvoie soit un tableau de lignes HTML, soit { lines, action }.
+export type Action = { type: 'theme'; name: string } | { type: 'matrix' }
+export interface CommandResult {
+  lines: string[]
+  action?: Action
+}
+type RunResult = string[] | CommandResult
+interface Command {
+  desc: string
+  hidden?: boolean
+  clear?: boolean
+  run: (args: string[]) => RunResult
+}
 
-function cowsay(message) {
+// Helpers de mise en forme. Le contenu est statique (le nôtre) — pas d'injection de saisie ici.
+const esc = (s: unknown): string =>
+  String(s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] as string)
+const link = (url: string, label?: string): string =>
+  `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label || url)}</a>`
+const dim = (s: string): string => `<span class="dim">${esc(s)}</span>`
+const accent = (s: string): string => `<span class="accent">${esc(s)}</span>`
+const ok = (s: string): string => `<span class="ok">${esc(s)}</span>`
+
+function cowsay(message: string): string[] {
   const msg = message || 'Moo!'
   const top = ' ' + '_'.repeat(msg.length + 2)
   const bottom = ' ' + '-'.repeat(msg.length + 2)
@@ -25,7 +40,7 @@ function cowsay(message) {
   ].map((l) => `<span class="banner">${l.startsWith('<') ? l : esc(l)}</span>`)
 }
 
-export const banner = [
+export const banner: string[] = [
   '<span class="banner">db   db d88888b db    db d888888b d8b   db</span>',
   '<span class="banner">88  \'8D 88\'     88    88   \'88\'   888o  88</span>',
   '<span class="banner">88ooo88 88ooooo Y8    8P    88    88V8o 88</span>',
@@ -40,7 +55,7 @@ export const banner = [
   '',
 ]
 
-const commands = {
+const commands: Record<string, Command> = {
   help: {
     desc: 'liste les commandes',
     run: () => [
@@ -50,7 +65,7 @@ const commands = {
         .filter(([, c]) => !c.hidden)
         .map(([name, c]) => `  ${accent(name.padEnd(12))} ${dim(c.desc)}`),
       '',
-      dim('Astuce : ↑/↓ pour l\'historique, Tab pour l\'autocomplétion.'),
+      dim("Astuce : ↑/↓ pour l'historique, Tab pour l'autocomplétion."),
     ],
   },
   whoami: {
@@ -98,7 +113,11 @@ const commands = {
       '',
     ],
   },
-  social: { desc: 'mes liens (alias de contact)', hidden: true, run: () => commands.contact.run() },
+  social: {
+    desc: 'mes liens (alias de contact)',
+    hidden: true,
+    run: () => commands.contact!.run([]),
+  },
   ls: {
     desc: 'liste les sections',
     run: () => [
@@ -136,23 +155,30 @@ const commands = {
       if (args.join(' ').includes('rm -rf')) {
         return [`<span class="err">Nice try.</span> ${dim('Cette infra est en lecture seule. 🙃')}`]
       }
-      return [`<span class="err">${esc(profile.name.split(' ')[0])} n'est pas dans le fichier sudoers.</span> ${dim('Cet incident sera signalé.')}`]
+      return [
+        `<span class="err">${esc(profile.name.split(' ')[0])} n'est pas dans le fichier sudoers.</span> ${dim('Cet incident sera signalé.')}`,
+      ]
     },
   },
   matrix: {
     desc: 'wake up, Neo…',
     hidden: true,
-    run: () => ({ lines: [dim('Suis le lapin blanc… (clic ou touche pour sortir)')], action: { type: 'matrix' } }),
+    run: () => ({
+      lines: [dim('Suis le lapin blanc… (clic ou touche pour sortir)')],
+      action: { type: 'matrix' },
+    }),
   },
-  clear: { desc: 'efface l\'écran', clear: true, run: () => [] },
+  clear: { desc: "efface l'écran", clear: true, run: () => [] },
 }
 
 export const commandNames = Object.keys(commands)
 
-export function execute(input) {
+export function execute(input: string): { lines: string[]; action?: Action; clear: boolean } {
   const raw = input.trim()
-  if (!raw) return { lines: [] }
-  const [name, ...args] = raw.split(/\s+/)
+  if (!raw) return { lines: [], clear: false }
+  const parts = raw.split(/\s+/)
+  const name = parts[0] ?? ''
+  const args = parts.slice(1)
   const cmd = commands[name.toLowerCase()]
   if (!cmd) {
     return {
@@ -160,10 +186,10 @@ export function execute(input) {
         `<span class="err">commande introuvable : ${esc(name)}</span>`,
         `Tape ${ok('help')} pour la liste des commandes.`,
       ],
+      clear: false,
     }
   }
   const result = cmd.run(args)
-  // run() renvoie soit un tableau de lignes, soit { lines, action }.
-  const normalized = Array.isArray(result) ? { lines: result } : result
+  const normalized: CommandResult = Array.isArray(result) ? { lines: result } : result
   return { lines: normalized.lines || [], action: normalized.action, clear: !!cmd.clear }
 }

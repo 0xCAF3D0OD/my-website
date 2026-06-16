@@ -1,6 +1,35 @@
 // Toutes tes données portfolio sont ici. Édite ce fichier, pas le terminal.
 
-export const profile = {
+export interface Profile {
+  name: string
+  role: string
+  location: string
+  tagline: string
+  email: string
+  github: string
+  linkedin: string
+}
+
+export interface SkillGroup {
+  group: string
+  items: string[]
+}
+
+export interface Project {
+  name: string
+  desc: string
+  stack: string[]
+  url: string
+}
+
+export interface ExperienceItem {
+  period: string
+  title: string
+  company: string
+  desc: string
+}
+
+export const profile: Profile = {
   name: 'Kevin Dinocera',
   role: 'Cloud / DevOps Engineer',
   location: 'France · eu-west-3',
@@ -10,22 +39,22 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/',
 }
 
-export const about = [
+export const about: string[] = [
   "Ingénieur Cloud / DevOps passionné par l'automatisation et l'infrastructure as code.",
-  "Je conçois et déploie des plateformes cloud fiables, reproductibles et observables.",
-  "Terraform, Kubernetes et CI/CD au quotidien — sur AWS comme sur OpenStack.",
+  'Je conçois et déploie des plateformes cloud fiables, reproductibles et observables.',
+  'Terraform, Kubernetes et CI/CD au quotidien — sur AWS comme sur OpenStack.',
 ]
 
-export const skills = [
-  { group: 'Cloud',        items: ['AWS', 'OpenStack', 'GCP'] },
-  { group: 'IaC',          items: ['Terraform', 'Ansible', 'Packer'] },
-  { group: 'Conteneurs',   items: ['Docker', 'Kubernetes', 'Helm'] },
-  { group: 'CI/CD',        items: ['GitLab CI', 'GitHub Actions', 'ArgoCD'] },
+export const skills: SkillGroup[] = [
+  { group: 'Cloud', items: ['AWS', 'OpenStack', 'GCP'] },
+  { group: 'IaC', items: ['Terraform', 'Ansible', 'Packer'] },
+  { group: 'Conteneurs', items: ['Docker', 'Kubernetes', 'Helm'] },
+  { group: 'CI/CD', items: ['GitLab CI', 'GitHub Actions', 'ArgoCD'] },
   { group: 'Observabilité', items: ['Prometheus', 'Grafana', 'Loki'] },
-  { group: 'Langages',     items: ['Python', 'Go', 'Bash'] },
+  { group: 'Langages', items: ['Python', 'Go', 'Bash'] },
 ]
 
-export const projects = [
+export const projects: Project[] = [
   {
     name: 'infra-as-code',
     desc: 'Déploiement multi-cloud entièrement décrit en Terraform, modules réutilisables.',
@@ -40,13 +69,13 @@ export const projects = [
   },
   {
     name: 'observability-stack',
-    desc: 'Stack d\'observabilité clé en main : métriques, logs et dashboards.',
+    desc: "Stack d'observabilité clé en main : métriques, logs et dashboards.",
     stack: ['Prometheus', 'Grafana', 'Loki'],
     url: 'https://github.com/kdi-noce',
   },
 ]
 
-export const experience = [
+export const experience: ExperienceItem[] = [
   {
     period: '2023 — présent',
     title: 'Cloud / DevOps Engineer',
