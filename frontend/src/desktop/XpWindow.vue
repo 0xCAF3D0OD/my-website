@@ -44,24 +44,24 @@ function startDrag(e: PointerEvent) {
 <template>
   <div
     v-show="!win.minimized"
-    class="xp-window"
+    class="window"
     :class="{ maximized: win.maximized }"
     :style="style"
     @pointerdown="focus(win)"
   >
     <div class="title-bar" @pointerdown="startDrag" @dblclick="toggleMaximize(win)">
-      <img class="title-icon" :src="win.icon" alt="" />
-      <span class="title-text">{{ win.title }}</span>
-      <div class="title-buttons">
-        <button class="tb min" aria-label="Réduire" @click.stop="minimize(win)">
-          <svg viewBox="0 0 10 10"><rect x="2" y="7" width="6" height="1.6" /></svg>
-        </button>
-        <button class="tb max" aria-label="Agrandir" @click.stop="toggleMaximize(win)">
-          <svg viewBox="0 0 10 10"><rect x="2" y="2" width="6" height="6" fill="none" stroke-width="1.4" /></svg>
-        </button>
-        <button class="tb close" aria-label="Fermer" @click.stop="close(win)">
-          <svg viewBox="0 0 10 10"><path d="M2 2l6 6M8 2l-6 6" stroke-width="1.6" /></svg>
-        </button>
+      <div class="title-bar-text">
+        <img :src="win.icon" alt="" />
+        <span>{{ win.title }}</span>
+      </div>
+      <div class="title-bar-controls">
+        <button aria-label="Minimize" @pointerdown.stop @click.stop="minimize(win)"></button>
+        <button
+          :aria-label="win.maximized ? 'Restore' : 'Maximize'"
+          @pointerdown.stop
+          @click.stop="toggleMaximize(win)"
+        ></button>
+        <button aria-label="Close" @pointerdown.stop @click.stop="close(win)"></button>
       </div>
     </div>
     <div class="window-body">
@@ -71,19 +71,14 @@ function startDrag(e: PointerEvent) {
 </template>
 
 <style scoped>
-.xp-window {
+.window {
   position: absolute;
   display: flex;
   flex-direction: column;
-  background: #ece9d8;
-  border: 1px solid #0831d9;
-  border-top: none;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4);
   overflow: hidden;
   min-width: 260px;
 }
-.xp-window.maximized {
+.window.maximized {
   inset: 0;
   width: auto !important;
   height: auto !important;
@@ -91,68 +86,23 @@ function startDrag(e: PointerEvent) {
 }
 
 .title-bar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 28px;
-  padding: 0 4px 0 6px;
-  background: linear-gradient(to bottom, #0058ee 0%, #3f8cf3 8%, #0a59ef 40%, #0a59ef 88%, #0848c8 100%);
-  color: #fff;
+  flex-shrink: 0;
   cursor: default;
   user-select: none;
-  flex-shrink: 0;
 }
-.title-icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-}
-.title-text {
+.title-bar-text {
   flex: 1;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.title-buttons {
-  display: flex;
-  gap: 2px;
-}
-.tb {
-  width: 21px;
-  height: 21px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #fff;
-  border-radius: 3px;
-  background: linear-gradient(to bottom, #4a8ef0, #1c5fd6);
-  cursor: pointer;
-}
-.tb svg {
-  width: 10px;
-  height: 10px;
-  fill: #fff;
-  stroke: #fff;
-}
-.tb:hover {
-  filter: brightness(1.15);
-}
-.tb.close {
-  background: linear-gradient(to bottom, #e9866b, #c5391b);
+  min-width: 0;
 }
 
 .window-body {
   flex: 1;
+  min-height: 0;
+  margin: 0 3px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: #fff;
-  border: 2px solid #0831d9;
-  border-top: none;
 }
 .window-body > :deep(*) {
   flex: 1;
