@@ -2,7 +2,7 @@ import { profile, about, skills, projects, experience } from '../portfolio'
 import { themeNames } from './themes'
 
 // Une commande renvoie soit un tableau de lignes HTML, soit { lines, action }.
-export type Action = { type: 'theme'; name: string } | { type: 'matrix' }
+export type Action = { type: 'theme'; name: string } | { type: 'matrix' } | { type: 'bsod' }
 export interface CommandResult {
   lines: string[]
   action?: Action
@@ -163,6 +163,21 @@ const commands: Record<string, Command> = {
       lines: [dim('Suis le lapin blanc… (clic ou touche pour sortir)')],
       action: { type: 'matrix' },
     }),
+  },
+  winver: {
+    desc: 'à propos de Windoors',
+    run: () => [
+      '',
+      `${accent('Windoors XP')} ${dim('— Édition Portfolio')}`,
+      'Version 5.1 (Build 2600)',
+      dim(`Concédé sous licence à : ${profile.name}`),
+      '',
+    ],
+  },
+  bsod: {
+    desc: '???',
+    hidden: true,
+    run: () => ({ lines: [dim('Erreur fatale… redémarrage imminent.')], action: { type: 'bsod' } }),
   },
   clear: { desc: "efface l'écran", clear: true, run: () => [] },
 }

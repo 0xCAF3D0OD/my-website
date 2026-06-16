@@ -27,6 +27,9 @@ const showMatrix = ref(false)
 const matrixCanvas = ref<HTMLCanvasElement | null>(null)
 let matrixRaf: number | null = null
 
+// --- Easter egg écran bleu ---
+const showBsod = ref(false)
+
 function focusInput() {
   if (!booting.value && !showMatrix.value) inputEl.value?.focus()
 }
@@ -54,6 +57,13 @@ function handleAction(action?: Action) {
   if (!action) return
   if (action.type === 'theme') applyTheme(action.name)
   if (action.type === 'matrix') startMatrix()
+  if (action.type === 'bsod') startBsod()
+}
+
+function startBsod() {
+  showBsod.value = true
+  // « redémarrage » : on recharge -> écran de chargement -> connexion.
+  window.setTimeout(() => location.reload(), 4500)
 }
 
 function submit() {
@@ -178,6 +188,13 @@ onMounted(() => {
 
     <div v-if="showMatrix" class="matrix-overlay" @click="stopMatrix">
       <canvas ref="matrixCanvas"></canvas>
+    </div>
+
+    <div v-if="showBsod" class="bsod">
+      <p>Un problème a été détecté et Windoors a été arrêté pour protéger votre portfolio.</p>
+      <p>PORTFOLIO_OVERFLOW_OF_AWESOMENESS</p>
+      <p>Si c'est la première fois que vous voyez cet écran, pas de panique.</p>
+      <p class="dim2">Collecte des informations… redémarrage automatique.</p>
     </div>
   </main>
 </template>
@@ -310,6 +327,26 @@ onMounted(() => {
 }
 .matrix-overlay canvas {
   display: block;
+}
+
+.bsod {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #0827a8;
+  color: #fff;
+  font-family: 'Lucida Console', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 12%;
+  gap: 14px;
+}
+.bsod .dim2 {
+  margin-top: 18px;
+  opacity: 0.85;
 }
 
 @media (max-width: 640px) {

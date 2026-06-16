@@ -5,6 +5,7 @@ import ProjectsApp from './apps/ProjectsApp.vue'
 import SkillsApp from './apps/SkillsApp.vue'
 import ContactApp from './apps/ContactApp.vue'
 import GuestbookApp from './apps/GuestbookApp.vue'
+import IExplorerApp from './apps/IExplorerApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import { icons } from './icons'
 
@@ -19,6 +20,15 @@ export interface AppDef {
 }
 
 export const apps: AppDef[] = [
+  {
+    id: 'iexplorer',
+    label: 'Internet',
+    title: 'Portfolio — Internet Explorer',
+    icon: icons.iexplorer,
+    component: IExplorerApp,
+    w: 740,
+    h: 540,
+  },
   {
     id: 'terminal',
     label: 'Terminal',

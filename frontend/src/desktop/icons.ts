@@ -8,6 +8,7 @@ export const icons = {
   mail: '/xp/icons/mail.ico',
   bin: '/xp/icons/bin.ico',
   computer: '/xp/icons/computer.ico',
+  iexplorer: '/xp/start/iexplorer.png',
 }
 
 // Logo Windows du bouton « démarrer » (pas de bitmap dédié dans les assets).

@@ -5,7 +5,7 @@ const emit = defineEmits<{ done: [] }>()
 let timer: number
 
 onMounted(() => {
-  timer = window.setTimeout(() => emit('done'), 4200)
+  timer = window.setTimeout(() => emit("done"), 4200)
 })
 onBeforeUnmount(() => clearTimeout(timer))
 </script>
@@ -38,26 +38,29 @@ onBeforeUnmount(() => clearTimeout(timer))
 }
 .logo {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 .flag {
-  width: 64px;
-  height: 58px;
+  width: 116px;
+  height: 105px;
+  margin-left: 78px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
 }
 .wordmark {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 9px;
   color: #fff;
   letter-spacing: 0.5px;
 }
 .wordmark b {
-  font-size: 34px;
+  font-size: 42px;
   font-weight: 400;
 }
 .wordmark i {
-  font-size: 28px;
+  font-size: 42px;
   font-weight: 700;
   font-style: italic;
   color: #ff9f17;
