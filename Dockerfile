@@ -1,10 +1,10 @@
-# --- Étape 1 : build du site statique ---
+# --- Étape 1 : build du site statique (frontend/) ---
 FROM node:22-alpine AS build
 WORKDIR /app
-COPY package.json package-lock.json* ./
+COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm ci || npm install
-COPY . .
-RUN npm run build
+COPY frontend/ ./
+RUN npm run build-only
 
 # --- Étape 2 : service via nginx ---
 FROM nginx:1.27-alpine
