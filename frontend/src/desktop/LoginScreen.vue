@@ -23,9 +23,7 @@ function login() {
 
 <template>
   <div class="login" :class="{ out: loggingIn }">
-    <header class="bar top">
-      <div class="hr light"></div>
-    </header>
+    <header class="bar top"></header>
 
     <main class="stage">
       <div class="brand">
@@ -50,7 +48,6 @@ function login() {
     </main>
 
     <footer class="bar bottom">
-      <div class="hr orange"></div>
       <div class="off">
         <span class="off-btn"><img src="/xp/login/power.png" alt="" /></span>
         <p>Arrêter l'ordinateur</p>
@@ -80,12 +77,12 @@ function login() {
 
 .bar {
   width: 100%;
-  background: #084da3;
+  background: #1231a1;
   position: relative;
   flex-shrink: 0;
 }
 .bar.top {
-  min-height: 112px;
+  min-height: 96px;
 }
 .bar.bottom {
   min-height: 96px;
@@ -93,38 +90,41 @@ function login() {
   align-items: center;
   justify-content: space-between;
 }
-.hr {
-  content: '';
-  width: 100%;
-  height: 7px;
-  position: absolute;
-  left: 0;
-}
-.hr.light {
-  bottom: 0;
-  background: linear-gradient(270deg, #084da3 6%, #ffffff 50%, #084da3 83%);
-}
-.hr.orange {
-  top: 0;
-  background: linear-gradient(270deg, #084da3 6%, #ff9933 50%, #084da3 83%);
-}
 
 .stage {
   flex: 1;
-  background: radial-gradient(60% 90% at 12% 20%, #9cc0e9 0%, #508fd9 70%, #3f7fc8 100%);
+  position: relative;
+  background: radial-gradient(circle at 6% 9%, #91b0ee 0%, #5a7edc 16%);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
+/* liserés authentiques (pondérés à gauche, façon XP) */
+.stage::before,
+.stage::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+.stage::before {
+  top: 0;
+  background: linear-gradient(to right, #5076d4, #c3dafd 15% 50%, transparent);
+}
+.stage::after {
+  bottom: 0;
+  background: linear-gradient(to right, #06389c, #f99737 15% 50%, transparent);
+}
 
 .brand {
+  justify-self: center;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  padding-right: 64px;
   position: relative;
-  top: -30px;
+  top: -8px;
 }
 .brand .logo {
   display: flex;
