@@ -13,9 +13,9 @@ terraform {
 
 # Configure the OpenStack Provider
 provider "openstack" {
-  auth_url    = "https://api.pub1.infomaniak.cloud/identity"
+  auth_url    = "https://api.pub1.infomaniak.cloud/identity/v3"
   region      = "dc3-a"
-  user_name   = "PCU-XXXXXXX" # TODO: changeme
-  tenant_name = "PCP-XXXXXXX" # TODO: changeme
-  password    = "your_password" # TODO: changeme
+  user_name   = "PCU-BAPHD4X"
+  tenant_name = "PCP-BAPHD4X-dc3-a"
+  password    = ""
 }
