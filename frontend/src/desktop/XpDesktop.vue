@@ -2,7 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { apps, type AppDef } from './registry'
 import { useWindows } from './useWindows'
-import { icons } from './icons'
+import { startFlag } from './icons'
 import XpWindow from './XpWindow.vue'
 
 const { windows, open, taskbarToggle } = useWindows()
@@ -48,7 +48,7 @@ function onDesktopClick() {
           @pointerdown.stop="selected = app.id"
           @dblclick="openApp(app)"
         >
-          <span class="glyph" v-html="app.icon"></span>
+          <img class="glyph" :src="app.icon" alt="" />
           <span class="label">{{ app.label }}</span>
         </button>
       </div>
@@ -60,12 +60,12 @@ function onDesktopClick() {
     <!-- Menu Démarrer -->
     <div v-if="startOpen" class="start-menu" @pointerdown.stop>
       <div class="start-head">
-        <span class="avatar" v-html="icons.start"></span>
+        <span class="avatar" v-html="startFlag"></span>
         <span>kevin</span>
       </div>
       <div class="start-list">
         <button v-for="app in apps" :key="app.id" class="start-item" @click="openApp(app)">
-          <span class="mini" v-html="app.icon"></span>
+          <img class="mini" :src="app.icon" alt="" />
           <span>{{ app.label }}</span>
         </button>
       </div>
@@ -74,7 +74,7 @@ function onDesktopClick() {
     <!-- Barre des tâches -->
     <div class="taskbar">
       <button class="start-btn" :class="{ active: startOpen }" @pointerdown.stop="startOpen = !startOpen">
-        <span class="flag" v-html="icons.start"></span>
+        <span class="flag" v-html="startFlag"></span>
         <span class="word">démarrer</span>
       </button>
       <div class="tasks">
@@ -85,7 +85,7 @@ function onDesktopClick() {
           :class="{ active: !win.minimized }"
           @click="taskbarToggle(win)"
         >
-          <span class="mini" v-html="win.icon"></span>
+          <img class="mini" :src="win.icon" alt="" />
           <span class="task-label">{{ win.title }}</span>
         </button>
       </div>
@@ -101,17 +101,7 @@ function onDesktopClick() {
   height: 100vh;
   overflow: hidden;
   font-family: Tahoma, Geneva, Verdana, sans-serif;
-  background:
-    radial-gradient(120% 80% at 75% 18%, rgba(255, 255, 255, 0.5), transparent 45%),
-    linear-gradient(
-      to bottom,
-      #3a7bd5 0%,
-      #5b9bd5 30%,
-      #8fc3ec 45%,
-      #b9e08a 54%,
-      #7cb342 66%,
-      #4e9a2f 100%
-    );
+  background: #3a6ea5 url('/xp/bliss.jpg') center / cover no-repeat;
 }
 .area {
   position: absolute;
@@ -153,12 +143,14 @@ function onDesktopClick() {
   display: inline-flex;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.4));
 }
-.glyph :deep(svg),
-.mini :deep(svg),
 .flag :deep(svg),
 .avatar :deep(svg) {
   width: 100%;
   height: 100%;
+}
+.glyph,
+.mini {
+  object-fit: contain;
 }
 .desk-icon .label {
   font-size: 11px;

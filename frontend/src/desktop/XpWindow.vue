@@ -50,7 +50,7 @@ function startDrag(e: PointerEvent) {
     @pointerdown="focus(win)"
   >
     <div class="title-bar" @pointerdown="startDrag" @dblclick="toggleMaximize(win)">
-      <span class="title-icon" v-html="win.icon"></span>
+      <img class="title-icon" :src="win.icon" alt="" />
       <span class="title-text">{{ win.title }}</span>
       <div class="title-buttons">
         <button class="tb min" aria-label="Réduire" @click.stop="minimize(win)">
@@ -105,11 +105,7 @@ function startDrag(e: PointerEvent) {
 .title-icon {
   width: 16px;
   height: 16px;
-  display: inline-flex;
-}
-.title-icon :deep(svg) {
-  width: 100%;
-  height: 100%;
+  flex-shrink: 0;
 }
 .title-text {
   flex: 1;

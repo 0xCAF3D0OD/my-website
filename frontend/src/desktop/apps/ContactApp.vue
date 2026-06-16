@@ -13,7 +13,7 @@ const links = [
   <div class="contact">
     <p class="intro">N'hésite pas à me contacter :</p>
     <a v-for="l in links" :key="l.label" class="row" :href="l.href" target="_blank" rel="noopener">
-      <span class="ico" v-html="l.icon"></span>
+      <img class="ico" :src="l.icon" alt="" />
       <div class="meta">
         <span class="label">{{ l.label }}</span>
         <span class="value">{{ l.value }}</span>
@@ -54,9 +54,8 @@ const links = [
   height: 28px;
   flex-shrink: 0;
 }
-.ico :deep(svg) {
-  width: 100%;
-  height: 100%;
+.ico {
+  object-fit: contain;
 }
 .meta {
   display: flex;

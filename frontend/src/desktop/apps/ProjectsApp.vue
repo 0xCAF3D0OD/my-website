@@ -7,11 +7,11 @@ import { icons } from '../icons'
   <div class="explorer">
     <div class="addressbar">
       <span class="label">Adresse</span>
-      <div class="path"><span v-html="icons.folder" class="mini"></span> C:\kevin\projets</div>
+      <div class="path"><img :src="icons.folder" class="mini" alt="" /> C:\kevin\projets</div>
     </div>
     <div class="items">
       <a v-for="p in projects" :key="p.name" class="item" :href="p.url" target="_blank" rel="noopener">
-        <span class="ico" v-html="icons.folder"></span>
+        <img class="ico" :src="icons.folder" alt="" />
         <div class="meta">
           <span class="name">{{ p.name }}</span>
           <span class="desc">{{ p.desc }}</span>
@@ -56,12 +56,10 @@ import { icons } from '../icons'
 .mini {
   width: 14px;
   height: 14px;
-  display: inline-flex;
+  object-fit: contain;
 }
-.mini :deep(svg),
-.ico :deep(svg) {
-  width: 100%;
-  height: 100%;
+.ico {
+  object-fit: contain;
 }
 .items {
   flex: 1;
