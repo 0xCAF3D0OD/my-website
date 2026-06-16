@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TerminalConsole from '../components/TerminalConsole.vue'
+import XpDesktop from '../desktop/XpDesktop.vue'
 </script>
 
 <template>
-  <TerminalConsole />
+  <XpDesktop />
 </template>
