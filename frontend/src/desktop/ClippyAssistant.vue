@@ -17,14 +17,21 @@ const tips: Tip[] = [
   { text: 'Tu peux me retrouver sur MSN Messenger 😉', action: { label: 'Ouvrir MSN', app: 'msn' } },
 ]
 
-const idle = Array.from({ length: 22 }, (_, i) => `/xp/clippy/idle/${String(i + 1).padStart(2, '0')}.png`)
-const greet = Array.from({ length: 19 }, (_, i) => `/xp/clippy/greet/${String(i + 1).padStart(2, '0')}.png`)
+const seq = (dir: string, count: number) =>
+  Array.from({ length: count }, (_, i) => `/xp/clippy/${dir}/${String(i + 1).padStart(2, '0')}.png`)
+
+const idle = seq('idle', 22)
+const greet = seq('greet', 19)
+const gestures = [seq('gest1', 4), seq('gest2', 22), seq('gest3', 22)]
+
+const FRAME_MS = 180 // cadence d'animation (plus lent qu'avant)
 
 const frame = ref(idle[0]!)
 const visible = ref(false)
 const i = ref(0)
 let showTimer: number
 let animTimer: number | null = null
+let gestureTimer: number | null = null
 
 function preload(list: string[]) {
   list.forEach((src) => {
@@ -36,8 +43,8 @@ function preload(list: string[]) {
 function play(frames: string[], loop: boolean, done?: () => void) {
   if (animTimer) clearInterval(animTimer)
   let f = 0
+  frame.value = frames[0]!
   animTimer = window.setInterval(() => {
-    frame.value = frames[f]!
     f++
     if (f >= frames.length) {
       if (loop) f = 0
@@ -45,15 +52,28 @@ function play(frames: string[], loop: boolean, done?: () => void) {
         if (animTimer) clearInterval(animTimer)
         animTimer = null
         done?.()
+        return
       }
     }
-  }, 70)
+    frame.value = frames[f]!
+  }, FRAME_MS)
+}
+
+// Idle en boucle, avec un geste aléatoire toutes les ~11 s.
+function startIdle() {
+  play(idle, true)
+  if (gestureTimer) clearTimeout(gestureTimer)
+  gestureTimer = window.setTimeout(playGesture, 9000 + Math.random() * 5000)
+}
+function playGesture() {
+  const g = gestures[Math.floor(Math.random() * gestures.length)]!
+  play(g, false, startIdle)
 }
 
 function appear() {
   i.value = Math.floor(Math.random() * tips.length)
   visible.value = true
-  play(greet, false, () => play(idle, true))
+  play(greet, false, startIdle)
 }
 function next() {
   i.value = (i.value + 1) % tips.length
@@ -62,6 +82,8 @@ function dismiss() {
   visible.value = false
   if (animTimer) clearInterval(animTimer)
   animTimer = null
+  if (gestureTimer) clearTimeout(gestureTimer)
+  gestureTimer = null
   clearTimeout(showTimer)
   showTimer = window.setTimeout(appear, 90000)
 }
@@ -78,6 +100,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearTimeout(showTimer)
   if (animTimer) clearInterval(animTimer)
+  if (gestureTimer) clearTimeout(gestureTimer)
 })
 </script>
 

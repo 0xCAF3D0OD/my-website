@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue'
 import { profile } from '../../portfolio'
+import { articles } from '../../blog'
 
 const openApp = inject<(id: string) => void>('openApp', () => {})
 
-const signedIn = ref(false)
+type View = 'login' | 'contacts' | 'blog'
+const view = ref<View>('login')
 const email = ref(profile.email)
 
 const avatarSrc = ref('/xp/login/avatar.jpg')
@@ -18,8 +20,10 @@ interface Contact {
   online: boolean
   href?: string
   app?: string
+  blog?: boolean
 }
 const online: Contact[] = [
+  { name: '📓 Blog de Kevin', status: `${articles.length} article(s)`, online: true, blog: true },
   { name: 'GitHub — @0xCAF3D0OD', status: 'mes dépôts', online: true, href: profile.github },
   { name: 'LinkedIn', status: 'me contacter', online: true, href: profile.linkedin },
   { name: 'alloremplacant.ch', status: 'projet en prod', online: true, href: 'https://alloremplacant.ch' },
@@ -31,7 +35,8 @@ const offline: Contact[] = [
 ]
 
 function openContact(c: Contact) {
-  if (c.app) openApp(c.app)
+  if (c.blog) view.value = 'blog'
+  else if (c.app) openApp(c.app)
   else if (c.href) window.open(c.href, '_blank', 'noopener')
 }
 </script>
@@ -39,10 +44,8 @@ function openContact(c: Contact) {
 <template>
   <div class="msn">
     <!-- Connexion -->
-    <template v-if="!signedIn">
-      <div class="head">
-        <img class="logo" src="/xp/msn/msnlogo.png" alt="MSN Messenger" />
-      </div>
+    <template v-if="view === 'login'">
+      <div class="head"><img class="logo" src="/xp/msn/msnlogo.png" alt="MSN Messenger" /></div>
       <div class="signin">
         <div class="buddy"><img src="/xp/msn/msnexplorer.png" alt="" /></div>
         <label>Adresse e-mail :</label>
@@ -50,12 +53,12 @@ function openContact(c: Contact) {
         <label>Mot de passe :</label>
         <input type="password" value="********" />
         <p class="status">État : <b>En ligne</b></p>
-        <button class="connect" @click="signedIn = true">Se connecter</button>
+        <button class="connect" @click="view = 'contacts'">Se connecter</button>
       </div>
     </template>
 
     <!-- Liste de contacts -->
-    <template v-else>
+    <template v-else-if="view === 'contacts'">
       <div class="me">
         <span class="ppic"><img :src="avatarSrc" alt="" @error="avatarFallback" /></span>
         <div class="meinfo">
@@ -66,16 +69,40 @@ function openContact(c: Contact) {
       <div class="list">
         <p class="group">En ligne ({{ online.length }})</p>
         <button v-for="c in online" :key="c.name" class="contact" @click="openContact(c)">
-          <span class="dot on"></span>
-          <span class="cname">{{ c.name }}</span>
-          <span class="cstatus">— {{ c.status }}</span>
+          <span class="dot on"></span><span class="cname">{{ c.name }}</span
+          ><span class="cstatus">— {{ c.status }}</span>
         </button>
         <p class="group">Hors ligne ({{ offline.length }})</p>
         <button v-for="c in offline" :key="c.name" class="contact off" @click="openContact(c)">
-          <span class="dot"></span>
-          <span class="cname">{{ c.name }}</span>
-          <span class="cstatus">— {{ c.status }}</span>
+          <span class="dot"></span><span class="cname">{{ c.name }}</span
+          ><span class="cstatus">— {{ c.status }}</span>
         </button>
+      </div>
+      <div class="msnfoot"><img src="/xp/msn/msnlogo.png" alt="" /></div>
+    </template>
+
+    <!-- Blog (conversation) -->
+    <template v-else>
+      <div class="convbar">
+        <button class="back" @click="view = 'contacts'">‹ Contacts</button>
+        <span class="convtitle">Blog de {{ profile.name }}</span>
+      </div>
+      <div class="conv">
+        <article v-for="(a, idx) in articles" :key="idx" class="post">
+          <div class="post-head">
+            <span class="ppic small"><img :src="avatarSrc" alt="" @error="avatarFallback" /></span>
+            <div>
+              <p class="post-title">{{ a.title }}</p>
+              <p class="post-date">{{ profile.name }} · {{ a.date }}</p>
+            </div>
+          </div>
+          <div class="bubble">
+            <p v-for="(p, k) in a.body" :key="k">{{ p }}</p>
+            <div v-if="a.tags?.length" class="tags">
+              <span v-for="t in a.tags" :key="t">#{{ t }}</span>
+            </div>
+          </div>
+        </article>
       </div>
       <div class="msnfoot"><img src="/xp/msn/msnlogo.png" alt="" /></div>
     </template>
@@ -123,7 +150,6 @@ function openContact(c: Contact) {
   height: 64px;
 }
 .signin label {
-  align-self: center;
   font-size: 12px;
   color: #234;
   margin-top: 4px;
@@ -160,6 +186,10 @@ function openContact(c: Contact) {
   border-radius: 4px;
   overflow: hidden;
   flex-shrink: 0;
+}
+.ppic.small {
+  width: 34px;
+  height: 34px;
 }
 .ppic img {
   width: 100%;
@@ -226,6 +256,76 @@ function openContact(c: Contact) {
 }
 .cstatus {
   color: #777;
+}
+
+/* Blog */
+.convbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: linear-gradient(to bottom, #eaf3ff, #cfe4fb);
+  border-bottom: 1px solid #9cc0e9;
+}
+.back {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+.convtitle {
+  font-size: 12px;
+  font-weight: bold;
+  color: #14315a;
+}
+.conv {
+  flex: 1;
+  overflow: auto;
+  padding: 10px;
+  background: linear-gradient(to bottom, #ffffff, #f3f8ff);
+}
+.post {
+  margin-bottom: 16px;
+}
+.post-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.post-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: bold;
+  color: #1c4587;
+}
+.post-date {
+  margin: 0;
+  font-size: 11px;
+  color: #888;
+}
+.bubble {
+  border: 1px solid #b9d3ef;
+  background: #eef5ff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-left: 42px;
+}
+.bubble p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #222;
+}
+.bubble p:last-child {
+  margin-bottom: 0;
+}
+.tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.tags span {
+  font-size: 10px;
+  color: #2a6fd6;
 }
 .msnfoot {
   border-top: 1px solid #cfe4fb;
