@@ -4,6 +4,7 @@ import AboutApp from './apps/AboutApp.vue'
 import ProjectsApp from './apps/ProjectsApp.vue'
 import SkillsApp from './apps/SkillsApp.vue'
 import ContactApp from './apps/ContactApp.vue'
+import GuestbookApp from './apps/GuestbookApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import { icons } from './icons'
 
@@ -62,6 +63,15 @@ export const apps: AppDef[] = [
     component: ContactApp,
     w: 460,
     h: 340,
+  },
+  {
+    id: 'guestbook',
+    label: 'Livre d’or.txt',
+    title: 'Livre d’or.txt — Bloc-notes',
+    icon: icons.notepad,
+    component: GuestbookApp,
+    w: 540,
+    h: 420,
   },
   {
     id: 'bin',

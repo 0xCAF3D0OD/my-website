@@ -41,14 +41,10 @@ function cowsay(message: string): string[] {
 }
 
 export const banner: string[] = [
-  '<span class="banner">db   db d88888b db    db d888888b d8b   db</span>',
-  '<span class="banner">88  \'8D 88\'     88    88   \'88\'   888o  88</span>',
-  '<span class="banner">88ooo88 88ooooo Y8    8P    88    88V8o 88</span>',
-  '<span class="banner">88~~~88 88~~~~~ \'8b  d8\'    88    88 V8o88</span>',
-  '<span class="banner">88   88 88.      \'8bd8\'    .88.   88  V888</span>',
-  '<span class="banner">YP   YP Y88888P    YP    Y888888P VP   V8P</span>',
+  'Windoors XP [Version 5.1.2600]',
+  '(C) Copyright 1985-2026 Windoors Corp.',
   '',
-  `${accent(profile.name)} ${dim('—')} ${profile.role}`,
+  `${accent(profile.name)} ${dim('-')} ${profile.role}`,
   dim(profile.tagline),
   '',
   `Tape ${ok('help')} pour voir les commandes disponibles.`,

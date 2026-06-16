@@ -9,7 +9,8 @@ interface Block {
   lines: string[]
 }
 
-const prompt = `${(profile.name.split(' ')[0] ?? 'user').toLowerCase()}@cloud`
+const firstName = profile.name.split(' ')[0] ?? 'User'
+const prompt = `C:\\Documents and Settings\\${firstName}>`
 
 // Bloc = une commande tapée + sa sortie. Le premier bloc (boot) se remplit progressivement.
 const blocks = reactive<Block[]>([{ input: null, lines: [] }])
@@ -150,16 +151,13 @@ onMounted(() => {
     <div class="screen" ref="screenEl">
       <div v-for="(block, i) in blocks" :key="i" class="block">
         <div v-if="block.input !== null" class="cmd-line">
-          <span class="prompt">{{ prompt }}</span
-          ><span class="sep">:</span><span class="path">~</span><span class="dollar">$</span>
-          <span class="typed">{{ block.input }}</span>
+          <span class="prompt">{{ prompt }}</span><span class="typed">{{ block.input }}</span>
         </div>
         <div v-for="(line, j) in block.lines" :key="j" class="out" v-html="line || '&nbsp;'"></div>
       </div>
 
       <div v-if="!booting" class="cmd-line input-line">
-        <span class="prompt">{{ prompt }}</span
-        ><span class="sep">:</span><span class="path">~</span><span class="dollar">$</span>
+        <span class="prompt">{{ prompt }}</span>
         <input
           ref="inputEl"
           v-model="current"
@@ -173,8 +171,7 @@ onMounted(() => {
         />
       </div>
       <div v-else class="cmd-line">
-        <span class="prompt">{{ prompt }}</span
-        ><span class="sep">:</span><span class="path">~</span><span class="dollar">$</span>
+        <span class="prompt">{{ prompt }}</span>
         <span class="cursor"></span>
       </div>
     </div>
@@ -193,20 +190,20 @@ onMounted(() => {
   flex-direction: column;
   background: var(--bg);
   overflow: hidden;
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: 'Lucida Console', 'DejaVu Sans Mono', 'Courier New', monospace;
 }
 
 .screen {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 18px 22px;
-  font-size: 14px;
-  line-height: 1.65;
+  padding: 6px 8px 14px;
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--fg);
 }
 
 .block {
-  margin-bottom: 2px;
+  margin-bottom: 0;
 }
 
 .cmd-line {
@@ -217,19 +214,10 @@ onMounted(() => {
 }
 .prompt {
   color: var(--prompt);
-}
-.sep {
-  color: var(--fg);
-}
-.path {
-  color: var(--path);
-}
-.dollar {
-  color: var(--fg);
-  margin: 0 8px 0 2px;
+  margin-right: 1px;
 }
 .typed {
-  color: #e6edf3;
+  color: var(--fg);
   white-space: pre-wrap;
 }
 
@@ -247,9 +235,9 @@ onMounted(() => {
   background: transparent;
   border: none;
   outline: none;
-  color: #e6edf3;
+  color: var(--fg);
   font: inherit;
-  caret-color: var(--accent);
+  caret-color: var(--fg);
   padding: 0;
 }
 
