@@ -2,10 +2,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { apps, type AppDef } from './registry'
 import { useWindows } from './useWindows'
-import { startFlag } from './icons'
 import XpWindow from './XpWindow.vue'
+import StartMenu from './StartMenu.vue'
 
-const { windows, open, taskbarToggle } = useWindows()
+const emit = defineEmits<{ logoff: [] }>()
+const { windows, open, taskbarToggle, reset } = useWindows()
 
 const selected = ref<string | null>(null)
 const startOpen = ref(false)
@@ -15,6 +16,12 @@ const muted = ref(false)
 function openApp(app: AppDef) {
   open(app)
   startOpen.value = false
+}
+
+function logoff() {
+  startOpen.value = false
+  reset()
+  emit('logoff')
 }
 
 function tick() {
@@ -59,18 +66,12 @@ function onDesktopClick() {
     </div>
 
     <!-- Menu Démarrer -->
-    <div v-if="startOpen" class="start-menu" @pointerdown.stop>
-      <div class="start-head">
-        <span class="avatar" v-html="startFlag"></span>
-        <span>kevin</span>
-      </div>
-      <div class="start-list">
-        <button v-for="app in apps" :key="app.id" class="start-item" @click="openApp(app)">
-          <img class="mini" :src="app.icon" alt="" />
-          <span>{{ app.label }}</span>
-        </button>
-      </div>
-    </div>
+    <StartMenu
+      v-if="startOpen"
+      @open="openApp"
+      @logoff="logoff"
+      @close="startOpen = false"
+    />
 
     <!-- Barre des tâches -->
     <div class="taskbar">
@@ -155,11 +156,6 @@ function onDesktopClick() {
   display: inline-flex;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.4));
 }
-.flag :deep(svg),
-.avatar :deep(svg) {
-  width: 100%;
-  height: 100%;
-}
 .glyph,
 .mini {
   object-fit: contain;
@@ -193,11 +189,11 @@ function onDesktopClick() {
 }
 .start-btn {
   height: 100%;
-  width: 102px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 0 16px 2px 8px;
+  gap: 5px;
+  padding: 0 22px 3px 9px;
+  white-space: nowrap;
   border: none;
   cursor: pointer;
   font-style: italic;
@@ -310,62 +306,5 @@ function onDesktopClick() {
 .tray-clock {
   margin-left: 2px;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
-}
-
-.start-menu {
-  position: absolute;
-  left: 0;
-  bottom: 30px;
-  width: 240px;
-  background: #fff;
-  border: 1px solid #0831d9;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  overflow: hidden;
-  z-index: 10000;
-  box-shadow: 3px -3px 12px rgba(0, 0, 0, 0.4);
-}
-.start-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: linear-gradient(to bottom, #1f60d8, #2f7ae6);
-  color: #fff;
-  font-size: 14px;
-  font-weight: bold;
-}
-.avatar {
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  background: #fff;
-  border-radius: 4px;
-  padding: 3px;
-}
-.start-list {
-  padding: 6px;
-}
-.start-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 7px 10px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 13px;
-  color: #111;
-  border-radius: 3px;
-  text-align: left;
-}
-.start-item:hover {
-  background: #2f7ae6;
-  color: #fff;
-}
-.start-item .mini {
-  width: 22px;
-  height: 22px;
 }
 </style>

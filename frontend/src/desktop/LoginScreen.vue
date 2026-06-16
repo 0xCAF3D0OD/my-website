@@ -5,6 +5,12 @@ import { profile } from '../portfolio'
 const emit = defineEmits<{ done: [] }>()
 const loggingIn = ref(false)
 
+// Photo de profil : /xp/login/avatar.jpg si présente, sinon icône neutre.
+const avatarSrc = ref('/xp/login/avatar.jpg')
+function avatarFallback() {
+  avatarSrc.value = '/xp/login/avatar.ico'
+}
+
 function login() {
   if (loggingIn.value) return
   loggingIn.value = true
@@ -31,7 +37,7 @@ function login() {
 
       <div class="users">
         <button class="user" :class="{ active: loggingIn }" @click="login">
-          <span class="avatar"><img src="/xp/login/avatar.ico" alt="" /></span>
+          <span class="avatar"><img :src="avatarSrc" alt="" @error="avatarFallback" /></span>
           <span class="meta">
             <span class="name">{{ profile.name }}</span>
             <span class="status">{{ loggingIn ? 'Connexion…' : profile.role }}</span>
@@ -184,8 +190,9 @@ function login() {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 .avatar img {
-  width: 46px;
-  height: 46px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .meta {
   display: flex;

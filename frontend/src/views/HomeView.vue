@@ -7,6 +7,6 @@ const booted = ref(false)
 </script>
 
 <template>
-  <XpDesktop v-if="booted" />
+  <XpDesktop v-if="booted" @logoff="booted = false" />
   <LoginScreen v-else @done="booted = true" />
 </template>

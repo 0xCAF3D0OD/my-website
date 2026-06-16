@@ -71,6 +71,11 @@ function taskbarToggle(win: WinState) {
   else focus(win)
 }
 
+function reset() {
+  windows.splice(0, windows.length)
+  topZ = 10
+}
+
 export function useWindows() {
-  return { windows, open, close, focus, minimize, toggleMaximize, taskbarToggle }
+  return { windows, open, close, focus, minimize, toggleMaximize, taskbarToggle, reset }
 }
