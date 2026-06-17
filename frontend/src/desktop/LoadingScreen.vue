@@ -5,7 +5,7 @@ const emit = defineEmits<{ done: [] }>()
 let timer: number
 
 onMounted(() => {
-  timer = window.setTimeout(() => emit('done'), 4200)
+  timer = window.setTimeout(() => emit("done"), 4200)
 })
 onBeforeUnmount(() => clearTimeout(timer))
 </script>
