@@ -17,18 +17,21 @@ onBeforeUnmount(() => clearTimeout(timer))
         <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
         <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
         <span class="wordmark"
-          ><b><span class="initiale">W</span>indoors</b><i>xp</i></span
+          ><b><span class="initiale">W</span>indoors</b><i>DK</i></span
         >
       </div>
     </div>
-    <div class="progress">
-      <div class="blocks"><i></i><i></i><i></i></div>
+    <div class="container">
+      <div class="box"></div>
+      <div class="box"></div>
+      <div class="box"></div>
     </div>
     <button class="skip" @click.stop="emit('done')">passer</button>
   </div>
 </template>
 
 <style scoped>
+
 .loading {
   position: fixed;
   inset: 0;
@@ -116,39 +119,43 @@ onBeforeUnmount(() => clearTimeout(timer))
   transform: translateY(-16px);
   display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
 }
-
-.progress {
-  width: 124px;
-  height: 17px;
-  border: 1px solid #4a4a4a;
-  border-radius: 9px;
+.container {
+  width: 200px;
+  height: 20px;
+  border: 2px solid #b2b2b2;
+  border-radius: 7px;
+  margin: 0 auto;
+  padding: 2px 1px;
   overflow: hidden;
-  position: relative;
-  background: #000;
+  font-size: 0;
 }
-.progress .blocks {
-  position: absolute;
-  top: 3px;
-  left: 0;
-  display: flex;
-  gap: 3px;
-  animation: slide 2.4s linear infinite;
-}
-.progress .blocks i {
-  display: block;
+.container .box {
   width: 9px;
-  height: 10px;
-  border-radius: 2px;
-  background: linear-gradient(to bottom, #6fb2ff, #1e5fd0 55%, #0b3aa0);
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #2838c7 0%,
+    #5979ef 17%,
+    #869ef3 32%,
+    #869ef3 45%,
+    #5979ef 59%,
+    #2838c7 100%
+  );
+  display: inline-block;
+  margin-right: 2px;
+  animation: loader 2.2s infinite;
+  animation-timing-function: linear;
 }
-@keyframes slide {
+
+@keyframes loader {
   0% {
-    transform: translateX(-39px);
+    transform: translate(-30px);
   }
   100% {
-    transform: translateX(124px);
+    transform: translate(200px);
   }
 }
+
 .skip {
   position: absolute;
   bottom: 22px;
