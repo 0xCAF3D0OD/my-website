@@ -7,9 +7,9 @@ import ContactApp from './apps/ContactApp.vue'
 import GuestbookApp from './apps/GuestbookApp.vue'
 import IExplorerApp from './apps/IExplorerApp.vue'
 import MsnApp from './apps/MsnApp.vue'
-import GamesApp from './apps/GamesApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import { icons } from './icons'
+import { games } from '../games/registry'
 
 export interface AppDef {
   id: string
@@ -95,15 +95,6 @@ export const apps: AppDef[] = [
     h: 480,
   },
   {
-    id: 'jeux',
-    label: 'Jeux',
-    title: 'Jeux',
-    icon: icons.games,
-    component: GamesApp,
-    w: 420,
-    h: 320,
-  },
-  {
     id: 'bin',
     label: 'Corbeille',
     title: 'Corbeille',
@@ -112,4 +103,17 @@ export const apps: AppDef[] = [
     w: 420,
     h: 280,
   },
+  // Jeux découverts dans src/games/ : chacun arrive sur le bureau avec sa
+  // propre icône (le champ `icon` de son game.ts).
+  ...games.map(
+    (g): AppDef => ({
+      id: 'game-' + g.id,
+      label: g.name,
+      title: g.name,
+      icon: g.icon || icons.games,
+      component: g.component,
+      w: g.w ?? 520,
+      h: g.h ?? 440,
+    }),
+  ),
 ]
