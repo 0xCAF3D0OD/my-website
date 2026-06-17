@@ -4,7 +4,7 @@ import { profile } from '../../portfolio'
 
 // 1) Crée une clé gratuite sur https://web3forms.com (associée à ton email)
 // 2) Colle-la ci-dessous. Les messages (et la pièce jointe) te seront envoyés par email.
-const WEB3FORMS_ACCESS_KEY = 'REMPLACE_PAR_TA_CLE_WEB3FORMS'
+const WEB3FORMS_ACCESS_KEY = 'd1940332-ca87-44d7-9c71-b5781b0fffcc'
 
 const fromEmail = ref('')
 const subject = ref('Prise de contact')
@@ -85,21 +85,36 @@ async function send() {
       <button class="tb" disabled><span class="ti">⧉</span>Copier</button>
       <button class="tb" disabled><span class="ti">📋</span>Coller</button>
       <span class="sep"></span>
-      <label class="tb attach"><span class="ti">📎</span>Joindre<input type="file" hidden @change="onFile" /></label>
+      <label class="tb attach"
+        ><span class="ti">📎</span>Joindre<input type="file" hidden @change="onFile"
+      /></label>
     </div>
 
     <!-- En-têtes -->
     <div class="headers">
-      <div class="row"><label>À :</label><div class="to">{{ profile.name }} &lt;{{ profile.email }}&gt;</div></div>
-      <div class="row"><label>De :</label><input v-model="fromEmail" type="email" placeholder="votre email (pour la réponse)" /></div>
+      <div class="row">
+        <label>À :</label>
+        <div class="to">{{ profile.name }} &lt;{{ profile.email }}&gt;</div>
+      </div>
+      <div class="row">
+        <label>De :</label
+        ><input v-model="fromEmail" type="email" placeholder="votre email (pour la réponse)" />
+      </div>
       <div class="row"><label>Objet :</label><input v-model="subject" type="text" /></div>
-      <div v-if="fileName" class="row"><label>Joint :</label><div class="to">📎 {{ fileName }}</div></div>
+      <div v-if="fileName" class="row">
+        <label>Joint :</label>
+        <div class="to">📎 {{ fileName }}</div>
+      </div>
     </div>
 
     <!-- Barre de mise en forme (décorative) -->
     <div class="format">
-      <select disabled><option>Arial</option></select>
-      <select disabled><option>10</option></select>
+      <select disabled>
+        <option>Arial</option>
+      </select>
+      <select disabled>
+        <option>10</option>
+      </select>
       <span class="sep"></span>
       <button disabled><b>G</b></button><button disabled><i>I</i></button
       ><button disabled><u>S</u></button>

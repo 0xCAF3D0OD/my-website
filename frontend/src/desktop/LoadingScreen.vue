@@ -17,7 +17,7 @@ onBeforeUnmount(() => clearTimeout(timer))
         <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
         <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
         <span class="wordmark"
-          ><b><span class="initiale">W</span>indoors</b><i>xp</i></span
+          ><b><span class="initiale">W</span>indoors</b><i>DK</i></span
         >
       </div>
     </div>
@@ -31,6 +31,7 @@ onBeforeUnmount(() => clearTimeout(timer))
 </template>
 
 <style scoped>
+
 .loading {
   position: fixed;
   inset: 0;
@@ -118,10 +119,12 @@ onBeforeUnmount(() => clearTimeout(timer))
   transform: translateY(-16px);
   display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
 }
-
+/* box-sizing content-box : indispensable car l'app a un * { box-sizing: border-box }
+   global qui, sinon, écrase la hauteur utile de la barre (boîtes invisibles). */
 .container {
-  width: 150px;
-  height: 10px;
+  width: 200px;
+  height: 14px;
+  box-sizing: content-box;
   border: 2px solid #b2b2b2;
   border-radius: 7px;
   margin: 0 auto;
@@ -129,7 +132,8 @@ onBeforeUnmount(() => clearTimeout(timer))
   overflow: hidden;
   font-size: 0;
 }
-.box {
+.container .box {
+  box-sizing: content-box;
   width: 9px;
   height: 100%;
   background: linear-gradient(
@@ -143,17 +147,17 @@ onBeforeUnmount(() => clearTimeout(timer))
   );
   display: inline-block;
   margin-right: 2px;
-  animation: loader 2s infinite;
-  animation-timing-function: linear;
+  animation: loader 2.2s infinite linear;
 }
 @keyframes loader {
   0% {
-    transform: translate(-30px);
+    transform: translateX(-30px);
   }
   100% {
-    transform: translate(150px);
+    transform: translateX(200px);
   }
 }
+
 .skip {
   position: absolute;
   bottom: 22px;

@@ -31,7 +31,7 @@ function login() {
           <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
           <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
           <span class="wordmark"
-            ><b><span class="initiale">W</span>indoors</b><i>xp</i></span
+            ><b><span class="initiale">W</span>indoors</b><i>DK</i></span
           >
         </div>
         <h1>Pour commencer, cliquez sur votre nom&nbsp;d'utilisateur</h1>
