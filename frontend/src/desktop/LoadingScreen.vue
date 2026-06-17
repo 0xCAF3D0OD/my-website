@@ -5,18 +5,25 @@ const emit = defineEmits<{ done: [] }>()
 let timer: number
 
 onMounted(() => {
-  timer = window.setTimeout(() => emit("done"), 4200)
+  timer = window.setTimeout(() => emit('done'), 4200)
 })
 onBeforeUnmount(() => clearTimeout(timer))
 </script>
 
 <template>
   <div class="loading" @click="emit('done')">
-    <div class="logo">
-      <img class="flag" src="/xp/windoors.svg" alt="" />
-      <span class="wordmark"><b>windoors</b><i>xp</i></span>
+    <div class="brand">
+      <div class="logo">
+        <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
+        <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
+        <span class="wordmark"
+          ><b><span class="initiale">W</span>indoors</b><i>xp</i></span
+        >
+      </div>
     </div>
-    <div class="progress"><div class="blocks"><i></i><i></i><i></i></div></div>
+    <div class="progress">
+      <div class="blocks"><i></i><i></i><i></i></div>
+    </div>
     <button class="skip" @click.stop="emit('done')">passer</button>
   </div>
 </template>
@@ -36,34 +43,78 @@ onBeforeUnmount(() => clearTimeout(timer))
   user-select: none;
   cursor: default;
 }
-.logo {
+.brand {
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  position: relative;
+  top: -4px;
+}
+.brand .logo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
-.flag {
-  width: 116px;
-  height: 105px;
-  margin-left: 78px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+/* 2. On place le tag où on veut sans faire bouger le reste */
+.tag-tech {
+  position: absolute;
+  top: 130px; /* Ajuste cette valeur pour monter/descendre par rapport au drapeau */
+  right: 160px; /* Propulse le texte sur la droite du logo */
+
+  font-family: Tahoma, sans-serif; /* Style très "DevOps / adresse mémoire" */
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
-.wordmark {
+.tag-tech i {
+  font-size: 6px;
+  font-style: normal;
+  transform: translateY(-25px);
+  display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
+}
+.brand .logo .flag {
+  width: 186px;
+  height: 137px;
+  margin-left: 60px;
+  filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.45));
+}
+.brand .wordmark {
   display: flex;
   align-items: baseline;
-  gap: 9px;
+  gap: 8px;
+  font-family: Tahoma, sans-serif;
+  /* léger flou type ClearType d'origine */
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 0.6),
+    1px 2px 3px rgba(0, 0, 0, 0.4);
+  filter: blur(0.4px);
+}
+.brand .wordmark b {
+  font-size: 40px;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: 0.5px;
 }
-.wordmark b {
-  font-size: 42px;
+
+.initiale {
+  font-size: 1.5em; /* Taille agrandie */
+  display: inline-block;
+  line-height: 0.8; /* Réduit l'espace autour de la lettre pour un meilleur contrôle */
+  vertical-align: baseline; /* Force l'alignement sur le bas du texte */
+}
+.brand .wordmark i {
+  font-size: 25px; /* On réduit la taille (environ la moitié de la taille de Windoors) */
   font-weight: 400;
-}
-.wordmark i {
-  font-size: 42px;
-  font-weight: 700;
-  font-style: italic;
-  color: #ff9f17;
+  font-style: normal;
+  color: #ff6600; /* Orange XP */
+
+  /* C'est ici que la magie opère pour l'effet de puissance : */
+  transform: translateY(-16px);
+  display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
 }
 
 .progress {

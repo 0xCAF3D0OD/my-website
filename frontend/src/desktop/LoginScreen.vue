@@ -28,8 +28,11 @@ function login() {
     <main class="stage">
       <div class="brand">
         <div class="logo">
-          <img class="flag" src="/xp/windoors.svg" alt="" />
-          <span class="wordmark"><b>windoors</b><i>xp</i></span>
+          <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
+          <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
+          <span class="wordmark"
+            ><b><span class="initiale">W</span>indoors</b><i>xp</i></span
+          >
         </div>
         <h1>Pour commencer, cliquez sur votre nom&nbsp;d'utilisateur</h1>
       </div>
@@ -67,7 +70,7 @@ function login() {
   z-index: 100000;
   display: flex;
   flex-direction: column;
-  font-family: 'Source Sans 3', 'Source Sans Pro', Tahoma, sans-serif;
+  font-family: 'Tahoma', 'Segoe UI', sans-serif;
   user-select: none;
   transition: opacity 0.6s ease;
 }
@@ -133,9 +136,29 @@ function login() {
   align-items: center;
   gap: 8px;
 }
+/* 2. On place le tag où on veut sans faire bouger le reste */
+.tag-tech {
+  position: absolute;
+  top: 130px; /* Ajuste cette valeur pour monter/descendre par rapport au drapeau */
+  right: 150px; /* Propulse le texte sur la droite du logo */
+
+  font-family: Tahoma, sans-serif; /* Style très "DevOps / adresse mémoire" */
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.tag-tech i {
+  font-size: 6px;
+  font-style: normal;
+  transform: translateY(-8px);
+  display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
+}
 .brand .logo .flag {
-  width: 96px;
-  height: 87px;
+  width: 186px;
+  height: 137px;
   margin-left: 60px;
   filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.45));
 }
@@ -155,11 +178,22 @@ function login() {
   font-weight: 600;
   color: #fff;
 }
+
+.initiale {
+  font-size: 1.5em; /* Taille agrandie */
+  display: inline-block;
+  line-height: 0.8; /* Réduit l'espace autour de la lettre pour un meilleur contrôle */
+  vertical-align: baseline; /* Force l'alignement sur le bas du texte */
+}
 .brand .wordmark i {
-  font-size: 40px;
-  font-weight: 700;
-  font-style: italic;
-  color: #ff9f17;
+  font-size: 25px; /* On réduit la taille (environ la moitié de la taille de Windoors) */
+  font-weight: 400;
+  font-style: normal;
+  color: #ff6600; /* Orange XP */
+
+  /* C'est ici que la magie opère pour l'effet de puissance : */
+  transform: translateY(-16px);
+  display: inline-block; /* Nécessaire pour que le transform s'applique correctement */
 }
 .brand h1 {
   font-size: 19px;
@@ -276,6 +310,10 @@ function login() {
 }
 
 @media (max-width: 720px) {
+  .tag-tech {
+    position: static; /* Reprend sa place normale sur mobile */
+    margin: 5px 0;
+  }
   .stage {
     grid-template-columns: 1fr;
     justify-items: center;
