@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { profile } from '../../portfolio'
 
 // 1) Crée une clé gratuite sur https://web3forms.com (associée à ton email)
 // 2) Colle-la ci-dessous. Les messages (et la pièce jointe) te seront envoyés par email.
 const WEB3FORMS_ACCESS_KEY = 'REMPLACE_PAR_TA_CLE_WEB3FORMS'
 
-const name = ref('')
-const email = ref('')
-const message = ref('')
+const fromEmail = ref('')
+const subject = ref('Prise de contact')
+const body = ref('')
 const fileName = ref('')
 let file: File | null = null
 const status = ref<'idle' | 'sending' | 'sent' | 'error'>('idle')
@@ -29,7 +30,7 @@ function onFile(e: Event) {
 }
 
 async function send() {
-  if (!message.value.trim()) {
+  if (!body.value.trim()) {
     status.value = 'error'
     errorMsg.value = 'Écris un message avant d’envoyer.'
     return
@@ -43,19 +44,17 @@ async function send() {
   try {
     const fd = new FormData()
     fd.append('access_key', WEB3FORMS_ACCESS_KEY)
-    fd.append('subject', 'Nouveau contact depuis le portfolio')
-    fd.append('from_name', name.value || 'Visiteur')
-    fd.append('name', name.value || 'Visiteur')
-    fd.append('email', email.value || 'no-reply@portfolio')
-    fd.append('message', message.value)
+    fd.append('subject', subject.value || 'Prise de contact')
+    fd.append('from_name', fromEmail.value || 'Visiteur')
+    fd.append('email', fromEmail.value || 'no-reply@portfolio')
+    fd.append('message', body.value)
     if (file) fd.append('attachment', file, file.name)
     const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd })
     const data = await res.json()
     if (data.success) {
       status.value = 'sent'
-      name.value = ''
-      email.value = ''
-      message.value = ''
+      body.value = ''
+      fromEmail.value = ''
       file = null
       fileName.value = ''
     } else {
@@ -69,153 +68,216 @@ async function send() {
 </script>
 
 <template>
-  <div class="notepad">
+  <div class="oe">
+    <!-- Menu -->
     <div class="menubar">
-      <span>Fichier</span><span>Édition</span><span>Format</span><span>Affichage</span><span>?</span>
+      <span>Fichier</span><span>Edition</span><span>Affichage</span><span>Insertion</span
+      ><span>Format</span><span>Outils</span><span>Message</span><span>?</span>
     </div>
 
-    <div class="intro">Une question, une opportunité ? Écris-moi — je te réponds par email.</div>
-
-    <div class="fields">
-      <label>Nom <input type="text" v-model="name" placeholder="Ton nom" /></label>
-      <label>Email <input type="email" v-model="email" placeholder="pour la réponse" /></label>
+    <!-- Barre d'outils -->
+    <div class="toolbar">
+      <button class="tb send" :disabled="status === 'sending'" @click="send">
+        <span class="ti">✉</span><span>Envoyer</span>
+      </button>
+      <span class="sep"></span>
+      <button class="tb" disabled><span class="ti">✂</span>Couper</button>
+      <button class="tb" disabled><span class="ti">⧉</span>Copier</button>
+      <button class="tb" disabled><span class="ti">📋</span>Coller</button>
+      <span class="sep"></span>
+      <label class="tb attach"><span class="ti">📎</span>Joindre<input type="file" hidden @change="onFile" /></label>
     </div>
 
+    <!-- En-têtes -->
+    <div class="headers">
+      <div class="row"><label>À :</label><div class="to">{{ profile.name }} &lt;{{ profile.email }}&gt;</div></div>
+      <div class="row"><label>De :</label><input v-model="fromEmail" type="email" placeholder="votre email (pour la réponse)" /></div>
+      <div class="row"><label>Objet :</label><input v-model="subject" type="text" /></div>
+      <div v-if="fileName" class="row"><label>Joint :</label><div class="to">📎 {{ fileName }}</div></div>
+    </div>
+
+    <!-- Barre de mise en forme (décorative) -->
+    <div class="format">
+      <select disabled><option>Arial</option></select>
+      <select disabled><option>10</option></select>
+      <span class="sep"></span>
+      <button disabled><b>G</b></button><button disabled><i>I</i></button
+      ><button disabled><u>S</u></button>
+    </div>
+
+    <!-- Corps -->
     <textarea
-      class="paper"
-      v-model="message"
+      class="body"
+      v-model="body"
       spellcheck="false"
-      wrap="soft"
-      placeholder="Ton message…"
+      placeholder="Écris ton message…"
     ></textarea>
 
-    <div class="attach">
-      <label class="filebtn">
-        📎 Joindre un fichier
-        <input type="file" @change="onFile" hidden />
-      </label>
-      <span class="fname">{{ fileName || 'aucun fichier' }}</span>
-    </div>
-
-    <div class="status-bar">
-      <div class="status-bar-field grow">
-        <span v-if="status === 'sending'">Envoi en cours…</span>
-        <span v-else-if="status === 'sent'" class="ok">Message envoyé, merci ! ✓</span>
-        <span v-else-if="status === 'error'" class="err">{{ errorMsg }}</span>
-        <span v-else>Prêt</span>
-      </div>
-      <div class="status-bar-field">
-        <button :disabled="status === 'sending'" @click="send">Envoyer</button>
-      </div>
+    <!-- État -->
+    <div class="statusbar">
+      <span v-if="status === 'sending'">Envoi en cours…</span>
+      <span v-else-if="status === 'sent'" class="ok">Message envoyé, merci ! ✓</span>
+      <span v-else-if="status === 'error'" class="err">{{ errorMsg }}</span>
+      <span v-else>Prêt</span>
     </div>
   </div>
 </template>
 
 <style scoped>
-.notepad {
+.oe {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fff;
+  background: #ece9d8;
+  font-family: Tahoma, sans-serif;
 }
 .menubar {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   padding: 3px 8px;
   font-size: 12px;
   color: #1a1a1a;
-  border-bottom: 1px solid #d6d3ce;
+  background: #ece9d8;
   flex-shrink: 0;
 }
 .menubar span {
   cursor: default;
 }
-.intro {
-  padding: 8px 10px 2px;
-  font-size: 12px;
-  color: #333;
-  flex-shrink: 0;
-}
-.fields {
-  display: flex;
-  gap: 12px;
-  padding: 6px 10px 4px;
-  flex-shrink: 0;
-}
-.fields label {
+.toolbar {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
+  padding: 3px 6px;
+  background: linear-gradient(to bottom, #fbfbf8, #e7e4d7);
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #aca899;
+  flex-shrink: 0;
+}
+.tb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #333;
+  cursor: pointer;
+}
+.tb .ti {
+  font-size: 16px;
+  line-height: 1;
+}
+.tb:not(:disabled):hover {
+  border-color: #b6c8e8;
+  background: #eef4fd;
+}
+.tb:disabled {
+  color: #aaa;
+  cursor: default;
+}
+.tb.send {
+  color: #14315a;
+  font-weight: bold;
+}
+.tb.send .ti {
+  color: #2a6fd6;
+}
+.toolbar .sep {
+  width: 1px;
+  height: 30px;
+  background: #c5c2b8;
+  margin: 0 4px;
+}
+
+.headers {
+  background: #fff;
+  border-bottom: 1px solid #aca899;
+  padding: 2px 0;
+  flex-shrink: 0;
+}
+.headers .row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+.headers .row:last-child {
+  border-bottom: none;
+}
+.headers label {
+  width: 56px;
+  text-align: right;
+  padding: 4px 8px;
   font-size: 12px;
   color: #333;
+  background: #ece9d8;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
 }
-.fields input {
-  width: 150px;
+.headers .to {
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #222;
 }
-.paper {
+.headers input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.format {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background: #ece9d8;
+  border-bottom: 1px solid #aca899;
+  flex-shrink: 0;
+}
+.format select,
+.format button {
+  font-size: 11px;
+  padding: 1px 4px;
+}
+.format .sep {
+  width: 1px;
+  height: 16px;
+  background: #c5c2b8;
+  margin: 0 3px;
+}
+
+.body {
   flex: 1;
   min-height: 0;
-  margin: 4px 10px;
   resize: none;
-  border: 1px solid #7f9db9;
-  padding: 6px 8px;
-  font-family: 'Lucida Console', monospace;
+  border: none;
+  outline: none;
+  padding: 8px 10px;
+  font-family: Arial, sans-serif;
   font-size: 13px;
   line-height: 1.5;
   color: #111;
-  outline: none;
+  background: #fff;
 }
-.attach {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px 6px;
-  flex-shrink: 0;
-}
-.filebtn {
-  font-size: 12px;
-  border: 1px solid #003c74;
-  border-radius: 3px;
-  padding: 3px 10px;
-  background: linear-gradient(180deg, #fff 0%, #ecebe5 86%, #d8d0c4 100%);
-  cursor: pointer;
-}
-.filebtn:hover {
-  box-shadow:
-    inset -1px 1px #fff0cf,
-    inset 1px 2px #fdd889,
-    inset -2px 2px #fbc761,
-    inset 2px -2px #e5a01a;
-}
-.fname {
-  font-size: 11px;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.status-bar {
-  display: flex;
-  gap: 2px;
-  padding: 2px 3px;
-  background: #ece9d8;
+.statusbar {
   border-top: 1px solid #fff;
+  background: #ece9d8;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #555;
   flex-shrink: 0;
 }
-.status-bar-field {
-  box-shadow: inset 1px 1px #808080, inset -1px -1px #fff;
-  padding: 2px 4px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-}
-.status-bar-field.grow {
-  flex: 1;
-}
-.status-bar-field .ok {
+.statusbar .ok {
   color: #1a7a1a;
 }
-.status-bar-field .err {
+.statusbar .err {
   color: #b00000;
 }
 </style>

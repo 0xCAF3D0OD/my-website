@@ -7,7 +7,7 @@ import ContactApp from './apps/ContactApp.vue'
 import GuestbookApp from './apps/GuestbookApp.vue'
 import IExplorerApp from './apps/IExplorerApp.vue'
 import MsnApp from './apps/MsnApp.vue'
-import MinesweeperApp from './apps/MinesweeperApp.vue'
+import GamesApp from './apps/GamesApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import { icons } from './icons'
 
@@ -79,11 +79,11 @@ export const apps: AppDef[] = [
   {
     id: 'guestbook',
     label: 'Me contacter',
-    title: 'Me contacter — Bloc-notes',
-    icon: icons.notepad,
+    title: 'Nouveau message — Outlook Express',
+    icon: icons.outlook,
     component: GuestbookApp,
-    w: 540,
-    h: 440,
+    w: 560,
+    h: 460,
   },
   {
     id: 'msn',
@@ -95,13 +95,13 @@ export const apps: AppDef[] = [
     h: 480,
   },
   {
-    id: 'minesweeper',
-    label: 'Démineur',
-    title: 'Démineur',
-    icon: icons.mine,
-    component: MinesweeperApp,
-    w: 264,
-    h: 350,
+    id: 'jeux',
+    label: 'Jeux',
+    title: 'Jeux',
+    icon: icons.games,
+    component: GamesApp,
+    w: 420,
+    h: 320,
   },
   {
     id: 'bin',

@@ -10,7 +10,7 @@ interface Tip {
 const tips: Tip[] = [
   { text: 'On dirait que tu visites un portfolio ! Besoin d’un coup de main ?' },
   { text: 'Astuce : double-clique sur les icônes du bureau pour ouvrir les fenêtres.' },
-  { text: 'Envie de jouer ? Réponds au quiz du Démineur pour gagner des vies.', action: { label: 'Ouvrir le Démineur', app: 'minesweeper' } },
+  { text: 'Envie de jouer ? Ouvre le dossier Jeux (Démineur, Morpion…).', action: { label: 'Ouvrir les Jeux', app: 'jeux' } },
   { text: 'Curieux des projets de Kevin ? Ouvre Internet Explorer.', action: { label: 'Ouvrir Internet', app: 'iexplorer' } },
   { text: 'Psst… le terminal cache des commandes secrètes. Essaie « help ».', action: { label: 'Ouvrir le terminal', app: 'terminal' } },
   { text: 'Tu veux contacter Kevin ? Ouvre le formulaire (tu peux joindre un fichier).', action: { label: 'Me contacter', app: 'guestbook' } },
