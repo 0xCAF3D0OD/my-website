@@ -2,13 +2,31 @@
 import { ref } from 'vue'
 
 // 1) Crée une clé gratuite sur https://web3forms.com (associée à ton email)
-// 2) Colle-la ci-dessous. Les messages te seront envoyés par email.
+// 2) Colle-la ci-dessous. Les messages (et la pièce jointe) te seront envoyés par email.
 const WEB3FORMS_ACCESS_KEY = 'REMPLACE_PAR_TA_CLE_WEB3FORMS'
 
 const name = ref('')
+const email = ref('')
 const message = ref('')
+const fileName = ref('')
+let file: File | null = null
 const status = ref<'idle' | 'sending' | 'sent' | 'error'>('idle')
 const errorMsg = ref('')
+
+function onFile(e: Event) {
+  const input = e.target as HTMLInputElement
+  file = input.files?.[0] ?? null
+  if (file && file.size > 5 * 1024 * 1024) {
+    status.value = 'error'
+    errorMsg.value = 'Fichier trop volumineux (max 5 Mo).'
+    file = null
+    fileName.value = ''
+    input.value = ''
+    return
+  }
+  fileName.value = file?.name ?? ''
+  status.value = 'idle'
+}
 
 async function send() {
   if (!message.value.trim()) {
@@ -18,27 +36,28 @@ async function send() {
   }
   if (WEB3FORMS_ACCESS_KEY.startsWith('REMPLACE')) {
     status.value = 'error'
-    errorMsg.value = 'Livre d’or non configuré (clé Web3Forms manquante).'
+    errorMsg.value = 'Formulaire non configuré (clé Web3Forms manquante).'
     return
   }
   status.value = 'sending'
   try {
-    const res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_ACCESS_KEY,
-        subject: 'Nouveau message — livre d’or du portfolio',
-        from_name: name.value || 'Visiteur',
-        name: name.value || 'Visiteur',
-        message: message.value,
-      }),
-    })
+    const fd = new FormData()
+    fd.append('access_key', WEB3FORMS_ACCESS_KEY)
+    fd.append('subject', 'Nouveau contact depuis le portfolio')
+    fd.append('from_name', name.value || 'Visiteur')
+    fd.append('name', name.value || 'Visiteur')
+    fd.append('email', email.value || 'no-reply@portfolio')
+    fd.append('message', message.value)
+    if (file) fd.append('attachment', file, file.name)
+    const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: fd })
     const data = await res.json()
     if (data.success) {
       status.value = 'sent'
       name.value = ''
+      email.value = ''
       message.value = ''
+      file = null
+      fileName.value = ''
     } else {
       throw new Error(data.message || 'Échec de l’envoi')
     }
@@ -51,30 +70,39 @@ async function send() {
 
 <template>
   <div class="notepad">
-    <!-- Barre de menus Bloc-notes -->
     <div class="menubar">
       <span>Fichier</span><span>Édition</span><span>Format</span><span>Affichage</span><span>?</span>
     </div>
 
-    <!-- Zone de texte (le « document ») -->
+    <div class="intro">Une question, une opportunité ? Écris-moi — je te réponds par email.</div>
+
+    <div class="fields">
+      <label>Nom <input type="text" v-model="name" placeholder="Ton nom" /></label>
+      <label>Email <input type="email" v-model="email" placeholder="pour la réponse" /></label>
+    </div>
+
     <textarea
       class="paper"
       v-model="message"
       spellcheck="false"
       wrap="soft"
-      placeholder="Laisse-moi un message…&#10;&#10;(il me sera envoyé par email)"
+      placeholder="Ton message…"
     ></textarea>
 
-    <!-- Barre d'état façon XP : nom + envoyer -->
+    <div class="attach">
+      <label class="filebtn">
+        📎 Joindre un fichier
+        <input type="file" @change="onFile" hidden />
+      </label>
+      <span class="fname">{{ fileName || 'aucun fichier' }}</span>
+    </div>
+
     <div class="status-bar">
       <div class="status-bar-field grow">
         <span v-if="status === 'sending'">Envoi en cours…</span>
         <span v-else-if="status === 'sent'" class="ok">Message envoyé, merci ! ✓</span>
         <span v-else-if="status === 'error'" class="err">{{ errorMsg }}</span>
         <span v-else>Prêt</span>
-      </div>
-      <div class="status-bar-field">
-        <input type="text" v-model="name" placeholder="Ton nom" aria-label="Ton nom" />
       </div>
       <div class="status-bar-field">
         <button :disabled="status === 'sending'" @click="send">Envoyer</button>
@@ -102,21 +130,70 @@ async function send() {
 .menubar span {
   cursor: default;
 }
+.intro {
+  padding: 8px 10px 2px;
+  font-size: 12px;
+  color: #333;
+  flex-shrink: 0;
+}
+.fields {
+  display: flex;
+  gap: 12px;
+  padding: 6px 10px 4px;
+  flex-shrink: 0;
+}
+.fields label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #333;
+}
+.fields input {
+  width: 150px;
+}
 .paper {
   flex: 1;
   min-height: 0;
-  margin: 0;
+  margin: 4px 10px;
   resize: none;
-  border: none;
-  border-top: 1px solid #808080;
-  padding: 4px 6px;
+  border: 1px solid #7f9db9;
+  padding: 6px 8px;
   font-family: 'Lucida Console', monospace;
   font-size: 13px;
   line-height: 1.5;
   color: #111;
   outline: none;
 }
-/* Barre d'état : reprend les codes XP.css (.status-bar / .status-bar-field) */
+.attach {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px 6px;
+  flex-shrink: 0;
+}
+.filebtn {
+  font-size: 12px;
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  padding: 3px 10px;
+  background: linear-gradient(180deg, #fff 0%, #ecebe5 86%, #d8d0c4 100%);
+  cursor: pointer;
+}
+.filebtn:hover {
+  box-shadow:
+    inset -1px 1px #fff0cf,
+    inset 1px 2px #fdd889,
+    inset -2px 2px #fbc761,
+    inset 2px -2px #e5a01a;
+}
+.fname {
+  font-size: 11px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .status-bar {
   display: flex;
   gap: 2px;
@@ -131,13 +208,9 @@ async function send() {
   font-size: 12px;
   display: flex;
   align-items: center;
-  gap: 4px;
 }
 .status-bar-field.grow {
   flex: 1;
-}
-.status-bar-field input {
-  width: 110px;
 }
 .status-bar-field .ok {
   color: #1a7a1a;

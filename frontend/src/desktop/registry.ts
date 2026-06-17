@@ -78,12 +78,12 @@ export const apps: AppDef[] = [
   },
   {
     id: 'guestbook',
-    label: 'Livre d’or.txt',
-    title: 'Livre d’or.txt — Bloc-notes',
+    label: 'Me contacter',
+    title: 'Me contacter — Bloc-notes',
     icon: icons.notepad,
     component: GuestbookApp,
     w: 540,
-    h: 420,
+    h: 440,
   },
   {
     id: 'msn',
@@ -101,7 +101,7 @@ export const apps: AppDef[] = [
     icon: icons.mine,
     component: MinesweeperApp,
     w: 264,
-    h: 510,
+    h: 350,
   },
   {
     id: 'bin',
