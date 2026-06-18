@@ -28,7 +28,7 @@ function login() {
     <main class="stage">
       <div class="brand">
         <div class="logo">
-          <img class="flag" src="/xp/windoors_flou_pixel.svg" alt="" />
+          <img class="flag" src="/xp/windoors_agit.svg" alt="" />
           <span class="tag-tech">0xCAF3D0OD<i>®</i></span>
           <span class="wordmark"
             ><b><span class="initiale">W</span>indoors</b><i>DK</i></span
@@ -159,7 +159,7 @@ function login() {
 .brand .logo .flag {
   width: 186px;
   height: 137px;
-  margin-left: 60px;
+  margin-left: 66px;
   filter: drop-shadow(1px 2px 4px rgba(0, 0, 0, 0.45));
 }
 .brand .wordmark {
