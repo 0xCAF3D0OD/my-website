@@ -110,7 +110,15 @@ function iconPointerMove(e: PointerEvent) {
   iconPos[dragId] = { x: Math.max(0, dOrigX + dx), y: Math.max(0, dOrigY + dy) }
 }
 function iconPointerUp() {
-  if (dragId && dragged) saveLayout()
+  if (dragId && dragged) {
+    // Alignement sur la grille au lâcher.
+    const p = iconPos[dragId]
+    if (p) {
+      p.x = X0 + Math.max(0, Math.round((p.x - X0) / COL_W)) * COL_W
+      p.y = Y0 + Math.max(0, Math.round((p.y - Y0) / ROW_H)) * ROW_H
+    }
+    saveLayout()
+  }
   dragId = null
   window.removeEventListener('pointermove', iconPointerMove)
   window.removeEventListener('pointerup', iconPointerUp)
@@ -211,7 +219,10 @@ function onDesktopClick() {
           :key="app.id"
           class="desk-icon"
           :class="{ selected: selected === app.id }"
-          :style="{ left: (iconPos[app.id]?.x ?? 14) + 'px', top: (iconPos[app.id]?.y ?? 12) + 'px' }"
+          :style="{
+            left: (iconPos[app.id]?.x ?? 14) + 'px',
+            top: (iconPos[app.id]?.y ?? 12) + 'px',
+          }"
           @pointerdown.stop="iconPointerDown($event, app.id)"
           @dblclick="openApp(app)"
         >
@@ -225,16 +236,15 @@ function onDesktopClick() {
     </div>
 
     <!-- Menu Démarrer -->
-    <StartMenu
-      v-if="startOpen"
-      @open="openApp"
-      @logoff="logoff"
-      @close="startOpen = false"
-    />
+    <StartMenu v-if="startOpen" @open="openApp" @logoff="logoff" @close="startOpen = false" />
 
     <!-- Barre des tâches -->
     <div class="taskbar">
-      <button class="start-btn" :class="{ active: startOpen }" @pointerdown.stop="startOpen = !startOpen">
+      <button
+        class="start-btn"
+        :class="{ active: startOpen }"
+        @pointerdown.stop="startOpen = !startOpen"
+      >
         <img class="flag" src="/xp/tray/xplogo.png" alt="" />
         <span class="word">démarrer</span>
       </button>
