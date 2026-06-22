@@ -31,14 +31,14 @@ function openById(id: string) {
 provide('openApp', openById)
 // Permet au lanceur de jeux d'ouvrir une fenêtre dynamique (jeu non listé dans apps).
 provide('openWindow', (def: AppDef) => open(def))
-
 // --- Icônes du bureau : disposition en groupes + déplacement (persisté) ---
 // Chaque sous-tableau = une colonne thématique.
 const iconGroups: string[][] = [
-  ['iexplorer', 'about', 'skills', 'projects', 'terminal'], // profil & compétences
+  ['terminal', 'iexplorer', 'msn'], // profil & compétences
+  ['about', 'cv-fr', 'cv-en'],
+  ['skills', 'projects'], // documents PDF
   ['contact', 'guestbook'], // me contacter
-  ['cv-fr', 'cv-en'], // documents PDF
-  ['game-minesweeper', 'game-morpion', 'msn', 'bin'], // jeux & annexes
+  ['game-minesweeper', 'game-morpion', 'bin'], // jeux & annexes
 ]
 const X0 = 14
 const Y0 = 12
@@ -54,7 +54,10 @@ function defaultLayout(): Record<string, { x: number; y: number }> {
     let ri = 0
     g.forEach((id) => {
       if (apps.some((a) => a.id === id)) {
-        pos[id] = { x: X0 + gi * COL_W, y: Y0 + ri * ROW_H }
+        pos[id] = {
+          x: X0 + ri * ROW_H,
+          y: Y0 + gi * 2 * COL_W,
+        }
         placed.add(id)
         ri++
       }
@@ -63,7 +66,10 @@ function defaultLayout(): Record<string, { x: number; y: number }> {
   let extra = 0
   apps.forEach((a) => {
     if (!placed.has(a.id)) {
-      pos[a.id] = { x: X0 + iconGroups.length * COL_W, y: Y0 + extra * ROW_H }
+      pos[a.id] = {
+        x: X0 + iconGroups.length * COL_W,
+        y: Y0 + extra * ROW_H,
+      }
       extra++
     }
   })
