@@ -74,7 +74,9 @@ const firstName = profile.name.split(' ')[0]
   <div class="ie">
     <!-- Barre d'outils -->
     <div class="toolbar">
-      <button class="tbtn" :disabled="index === 0" title="Précédent" @click="back">‹ Précédent</button>
+      <button class="tbtn" :disabled="index === 0" title="Précédent" @click="back">
+        ‹ Précédent
+      </button>
       <button class="tbtn" :disabled="index >= history.length - 1" title="Suivant" @click="forward">
         Suivant ›
       </button>
@@ -93,14 +95,11 @@ const firstName = profile.name.split(' ')[0]
         <!-- Barre latérale -->
         <aside class="wiki-side">
           <div class="logo">
-            <svg viewBox="0 0 60 60" class="globe">
-              <circle cx="30" cy="30" r="26" fill="#fff" stroke="#a2a9b1" stroke-width="1.5" />
-              <ellipse cx="30" cy="30" rx="12" ry="26" fill="none" stroke="#c8ccd1" />
-              <ellipse cx="30" cy="30" rx="26" ry="12" fill="none" stroke="#c8ccd1" />
-              <line x1="4" y1="30" x2="56" y2="30" stroke="#c8ccd1" />
-              <line x1="30" y1="4" x2="30" y2="56" stroke="#c8ccd1" />
-            </svg>
-            <div class="wm"><b>Wiki<span>DK</span></b><small>L'encyclopédie de Kevin</small></div>
+            <img src="/xp/icons/wiki.svg" alt="Wiki" class="wiki-icon" />
+            <div class="wm">
+              <b>Wiki<span>DK</span></b
+              ><small>L'encyclopédie de Kevin</small>
+            </div>
           </div>
           <p class="navtitle">navigation</p>
           <ul>
@@ -122,7 +121,10 @@ const firstName = profile.name.split(' ')[0]
         <main class="wiki-main">
           <div class="tabs">
             <span class="tab active">Article</span><span class="tab">Discussion</span>
-            <span class="tabs-right"><span class="tab">Lire</span><span class="tab">Modifier</span><span class="tab">Historique</span></span>
+            <span class="tabs-right"
+              ><span class="tab">Lire</span><span class="tab">Modifier</span
+              ><span class="tab">Historique</span></span
+            >
           </div>
 
           <!-- Page projet -->
@@ -146,10 +148,26 @@ const firstName = profile.name.split(' ')[0]
               <div class="ib-title">{{ profile.name }}</div>
               <div class="ib-photo"><img :src="avatarSrc" alt="" @error="avatarFallback" /></div>
               <table>
-                <tr><th>Poste</th><td>{{ profile.role }}</td></tr>
-                <tr><th>Localisation</th><td>{{ profile.location }}</td></tr>
-                <tr><th>Courriel</th><td><a class="ext" @click="openExternal('mailto:' + profile.email)">{{ profile.email }}</a></td></tr>
-                <tr><th>GitHub</th><td><a class="ext" @click="openExternal(profile.github)">@0xCAF3D0OD</a></td></tr>
+                <tr>
+                  <th>Poste</th>
+                  <td>{{ profile.role }}</td>
+                </tr>
+                <tr>
+                  <th>Localisation</th>
+                  <td>{{ profile.location }}</td>
+                </tr>
+                <tr>
+                  <th>Courriel</th>
+                  <td>
+                    <a class="ext" @click="openExternal('mailto:' + profile.email)">{{
+                      profile.email
+                    }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <th>GitHub</th>
+                  <td><a class="ext" @click="openExternal(profile.github)">@0xCAF3D0OD</a></td>
+                </tr>
               </table>
             </div>
 
@@ -165,7 +183,8 @@ const firstName = profile.name.split(' ')[0]
             <h2 id="parcours">Parcours professionnel</h2>
             <ul class="timeline">
               <li v-for="(e, i) in experience" :key="i">
-                <b>{{ e.title }}</b> — {{ e.company }} <span class="muted">({{ e.period }})</span><br />
+                <b>{{ e.title }}</b> — {{ e.company }} <span class="muted">({{ e.period }})</span
+                ><br />
                 <span v-for="(l, k) in e.desc.split('\n')" :key="k">{{ l }}<br /></span>
               </li>
             </ul>
@@ -173,14 +192,17 @@ const firstName = profile.name.split(' ')[0]
             <h2 id="formation">Formation</h2>
             <ul class="timeline">
               <li v-for="(ed, i) in education" :key="i">
-                <b>{{ ed.school }}</b> <span class="muted">({{ ed.period }})</span><br />{{ ed.detail }}
+                <b>{{ ed.school }}</b> <span class="muted">({{ ed.period }})</span><br />{{
+                  ed.detail
+                }}
               </li>
             </ul>
 
             <h2 id="competences">Compétences</h2>
             <table class="skills">
               <tr v-for="s in skills" :key="s.group">
-                <th>{{ s.group }}</th><td>{{ s.items.join(', ') }}</td>
+                <th>{{ s.group }}</th>
+                <td>{{ s.items.join(', ') }}</td>
               </tr>
             </table>
 
@@ -192,8 +214,8 @@ const firstName = profile.name.split(' ')[0]
             </ul>
 
             <p class="footer-note">
-              Cet article est une recréation ludique façon encyclopédie. Pour me contacter,
-              ouvre « Me contacter » sur le bureau.
+              Cet article est une recréation ludique façon encyclopédie. Pour me contacter, ouvre «
+              Me contacter » sur le bureau.
             </p>
           </template>
         </main>
@@ -434,6 +456,7 @@ table.skills td {
 }
 
 /* Infobox flottante (droite) */
+
 .infobox {
   float: right;
   width: 210px;
@@ -442,6 +465,12 @@ table.skills td {
   background: #f8f9fa;
   padding: 8px;
   font-size: 12px;
+}
+.infobox td {
+  max-width: 0; /* Astuce nécessaire pour que le text-overflow fonctionne en tableau */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .ib-title {
   text-align: center;
@@ -493,7 +522,9 @@ table.skills td {
   flex-shrink: 0;
 }
 .status-bar-field {
-  box-shadow: inset 1px 1px #808080, inset -1px -1px #fff;
+  box-shadow:
+    inset 1px 1px #808080,
+    inset -1px -1px #fff;
   padding: 2px 6px;
   font-size: 12px;
   color: #333;

@@ -117,6 +117,9 @@
 .title-bar-controls button[aria-label='Close']:active {
   background-image: url('/xp/wnd/close-active.svg');
 }
+.morpion-smiley button[aria-label='Restore']:active {
+  background-image: url('/xp/icons/smiley.svg');
+}
 
 /* Contrôles natifs dans le contenu d'une fenêtre (boutons / champs des apps) */
 .window-body button {

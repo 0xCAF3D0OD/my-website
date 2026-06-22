@@ -23,13 +23,28 @@ let placed = false
 // Bonne réponse = la mine est désamorcée et la partie continue. Mauvaise = game over.
 const quiz = [
   {
+    q: 'Quel projet a permis a Kevin de developper sa connaissance sur le monitoring grafana-prometheus ?',
+    opts: ['Esp32-monitoring', 'monitor42', 'get-my-grafana'],
+    a: 0,
+  },
+  {
+    q: 'Quel est le nom du projet de stage que Kevin a fait durant son deuxième stage ?',
+    opts: ['PortalSre', 'Portal', 'SREPortal'],
+    a: 2,
+  },
+  {
+    q: 'Quelle formation Kevin a-t-il suivie ?',
+    opts: ['EPFL', 'Ecole42', 'Epitech'],
+    a: 1,
+  },
+  {
     q: 'Chez quelle entreprise Kevin a-t-il fait son stage DevOps ?',
     opts: ['NAGRA Kudelski', 'Google', 'OVHcloud'],
     a: 0,
   },
   {
     q: 'Quel projet de Kevin tourne en production ?',
-    opts: ['alloremplacant.ch', 'monsite.fr', 'example.com'],
+    opts: ['alloremplacant.ch', 'dkey.fr', 'example.com'],
     a: 0,
   },
   {
@@ -38,8 +53,8 @@ const quiz = [
     a: 1,
   },
   {
-    q: 'Dans quel pays Kevin travaille-t-il ?',
-    opts: ['Canada', 'Japon', 'Suisse'],
+    q: 'Dans quel region Kevin peut il travailler ?',
+    opts: ['Genève', 'Lausanne', 'Partout'],
     a: 2,
   },
   {
@@ -179,18 +194,26 @@ function checkWin() {
   }
 }
 
-const face = computed(() =>
-  state.value === 'lost'
-    ? '😵'
-    : state.value === 'won'
-      ? '😎'
-      : state.value === 'question'
-        ? '😨'
-        : '🙂',
-)
+const face = computed(() => {
+  if (state.value === 'lost') return '😵'
+  if (state.value === 'won') return '😎'
+  if (state.value === 'question') return '😨'
+  return 'svg' // État par défaut (ready / playing)
+})
+
 const minesLeft = computed(() => Math.max(0, MINES - flags.value))
 const pad = (n: number) => n.toString().padStart(3, '0')
-const numColor = ['', '#0000ff', '#008000', '#ff0000', '#000080', '#800000', '#008080', '#000', '#808080']
+const numColor = [
+  '',
+  '#0000ff',
+  '#008000',
+  '#ff0000',
+  '#000080',
+  '#800000',
+  '#008080',
+  '#000',
+  '#808080',
+]
 
 reset()
 onBeforeUnmount(() => {
@@ -202,7 +225,10 @@ onBeforeUnmount(() => {
   <div class="ms" @contextmenu.prevent>
     <div class="panel">
       <div class="led">{{ pad(minesLeft) }}</div>
-      <button class="face" @click="reset">{{ face }}</button>
+      <button class="face" @click="reset">
+        <img v-if="face === 'svg'" src="/xp/icons/smiley.svg" alt="Smiley" class="smiley-img" />
+        <span v-else>{{ face }}</span>
+      </button>
       <div class="led">{{ pad(time) }}</div>
     </div>
     <div class="board" :style="{ gridTemplateColumns: `repeat(${COLS}, 22px)` }">
@@ -217,7 +243,9 @@ onBeforeUnmount(() => {
         >
           <template v-if="cell.revealed">
             <span v-if="cell.mine">💣</span>
-            <span v-else-if="cell.adj > 0" :style="{ color: numColor[cell.adj] }">{{ cell.adj }}</span>
+            <span v-else-if="cell.adj > 0" :style="{ color: numColor[cell.adj] }">{{
+              cell.adj
+            }}</span>
           </template>
           <span v-else-if="cell.flagged">🚩</span>
         </button>
@@ -262,7 +290,9 @@ onBeforeUnmount(() => {
   width: 100%;
   max-width: 230px;
   padding: 5px 8px;
-  box-shadow: inset 2px 2px #808080, inset -2px -2px #fff;
+  box-shadow:
+    inset 2px 2px #808080,
+    inset -2px -2px #fff;
   background: #c0c0c0;
 }
 .led {
@@ -280,16 +310,31 @@ onBeforeUnmount(() => {
   font-size: 17px;
   border: none;
   background: #c0c0c0;
-  box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
+  box-shadow:
+    inset -2px -2px #808080,
+    inset 2px 2px #fff;
   cursor: pointer;
+  display: flex; /* Ajouté pour centrer l'image/emoji */
+  align-items: center; /* Ajouté */
+  justify-content: center; /* Ajouté */
+  padding: 0;
 }
 .face:active {
-  box-shadow: inset 2px 2px #808080, inset -2px -2px #fff;
+  box-shadow:
+    inset 2px 2px #808080,
+    inset -2px -2px #fff;
+}
+.smiley-img {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 .board {
   display: grid;
   gap: 0;
-  box-shadow: inset 3px 3px #808080, inset -3px -3px #fff;
+  box-shadow:
+    inset 3px 3px #808080,
+    inset -3px -3px #fff;
   padding: 3px;
   background: #c0c0c0;
 }
@@ -302,7 +347,9 @@ onBeforeUnmount(() => {
   border: none;
   padding: 0;
   background: #c0c0c0;
-  box-shadow: inset -2px -2px #808080, inset 2px 2px #fff;
+  box-shadow:
+    inset -2px -2px #808080,
+    inset 2px 2px #fff;
   cursor: pointer;
   display: flex;
   align-items: center;
