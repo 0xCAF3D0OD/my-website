@@ -24,23 +24,10 @@ let startX = 0
 let startY = 0
 let originX = 0
 let originY = 0
+
 function onMove(e: PointerEvent) {
   props.win.x = originX + (e.clientX - startX)
   props.win.y = Math.max(0, originY + (e.clientY - startY))
-}
-function onUp() {
-  window.removeEventListener('pointermove', onMove)
-  window.removeEventListener('pointerup', onUp)
-}
-function startDrag(e: PointerEvent) {
-  if (props.win.maximized) return
-  focus(props.win)
-  startX = e.clientX
-  startY = e.clientY
-  originX = props.win.x
-  originY = props.win.y
-  window.addEventListener('pointermove', onMove)
-  window.addEventListener('pointerup', onUp)
 }
 
 // --- Redimensionnement (8 poignées) ---
@@ -67,6 +54,7 @@ function onResize(e: PointerEvent) {
     props.win.h = h
   }
 }
+
 function onResizeUp() {
   window.removeEventListener('pointermove', onResize)
   window.removeEventListener('pointerup', onResizeUp)
@@ -83,6 +71,20 @@ function startResize(e: PointerEvent, d: string) {
   oH = props.win.h
   window.addEventListener('pointermove', onResize)
   window.addEventListener('pointerup', onResizeUp)
+}
+function onUp() {
+  window.removeEventListener('pointermove', onMove)
+  window.removeEventListener('pointerup', onUp)
+}
+function startDrag(e: PointerEvent) {
+  if (props.win.maximized) return
+  focus(props.win)
+  startX = e.clientX
+  startY = e.clientY
+  originX = props.win.x
+  originY = props.win.y
+  window.addEventListener('pointermove', onMove)
+  window.addEventListener('pointerup', onUp)
 }
 </script>
 
@@ -112,7 +114,6 @@ function startResize(e: PointerEvent, d: string) {
     <div class="window-body">
       <component :is="win.component" />
     </div>
-
     <!-- Poignées de redimensionnement -->
     <template v-if="!win.maximized">
       <div class="rz n" @pointerdown.stop="startResize($event, 'n')"></div>
@@ -155,6 +156,7 @@ function startResize(e: PointerEvent, d: string) {
 .window-body {
   flex: 1;
   min-height: 0;
+  margin: 0 3px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -164,7 +166,6 @@ function startResize(e: PointerEvent, d: string) {
   flex: 1;
   min-height: 0;
 }
-
 /* Poignées de redimensionnement (zones invisibles sur les bords/coins) */
 .rz {
   position: absolute;
