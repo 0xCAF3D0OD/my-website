@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
 import { apps, type AppDef } from './registry'
 import { useWindows } from './useWindows'
 import { muted } from './sound'
@@ -31,6 +31,90 @@ function openById(id: string) {
 provide('openApp', openById)
 // Permet au lanceur de jeux d'ouvrir une fenêtre dynamique (jeu non listé dans apps).
 provide('openWindow', (def: AppDef) => open(def))
+
+// --- Icônes du bureau : disposition en groupes + déplacement (persisté) ---
+// Chaque sous-tableau = une colonne thématique.
+const iconGroups: string[][] = [
+  ['iexplorer', 'about', 'skills', 'projects', 'terminal'], // profil & compétences
+  ['contact', 'guestbook'], // me contacter
+  ['cv-fr', 'cv-en'], // documents PDF
+  ['game-minesweeper', 'game-morpion', 'msn', 'bin'], // jeux & annexes
+]
+const X0 = 14
+const Y0 = 12
+const COL_W = 92
+const ROW_H = 80
+const LS_KEY = 'desktop-icons-v1'
+const iconPos = reactive<Record<string, { x: number; y: number }>>({})
+
+function defaultLayout(): Record<string, { x: number; y: number }> {
+  const pos: Record<string, { x: number; y: number }> = {}
+  const placed = new Set<string>()
+  iconGroups.forEach((g, gi) => {
+    let ri = 0
+    g.forEach((id) => {
+      if (apps.some((a) => a.id === id)) {
+        pos[id] = { x: X0 + gi * COL_W, y: Y0 + ri * ROW_H }
+        placed.add(id)
+        ri++
+      }
+    })
+  })
+  let extra = 0
+  apps.forEach((a) => {
+    if (!placed.has(a.id)) {
+      pos[a.id] = { x: X0 + iconGroups.length * COL_W, y: Y0 + extra * ROW_H }
+      extra++
+    }
+  })
+  return pos
+}
+function loadLayout() {
+  let saved: Record<string, { x: number; y: number }> = {}
+  try {
+    saved = JSON.parse(localStorage.getItem(LS_KEY) || '{}')
+  } catch {
+    saved = {}
+  }
+  const def = defaultLayout()
+  apps.forEach((a) => {
+    iconPos[a.id] = saved[a.id] || def[a.id] || { x: X0, y: Y0 }
+  })
+}
+function saveLayout() {
+  localStorage.setItem(LS_KEY, JSON.stringify(iconPos))
+}
+
+let dragId: string | null = null
+let dStartX = 0
+let dStartY = 0
+let dOrigX = 0
+let dOrigY = 0
+let dragged = false
+function iconPointerDown(e: PointerEvent, id: string) {
+  selected.value = id
+  dragId = id
+  dragged = false
+  dStartX = e.clientX
+  dStartY = e.clientY
+  dOrigX = iconPos[id]?.x ?? X0
+  dOrigY = iconPos[id]?.y ?? Y0
+  window.addEventListener('pointermove', iconPointerMove)
+  window.addEventListener('pointerup', iconPointerUp)
+}
+function iconPointerMove(e: PointerEvent) {
+  if (!dragId) return
+  const dx = e.clientX - dStartX
+  const dy = e.clientY - dStartY
+  if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragged = true
+  iconPos[dragId] = { x: Math.max(0, dOrigX + dx), y: Math.max(0, dOrigY + dy) }
+}
+function iconPointerUp() {
+  if (dragId && dragged) saveLayout()
+  dragId = null
+  window.removeEventListener('pointermove', iconPointerMove)
+  window.removeEventListener('pointerup', iconPointerUp)
+}
 
 // --- Économiseur d'écran (logo windoors rebondissant après inactivité) ---
 const screensaver = ref(false)
@@ -95,6 +179,7 @@ function tick() {
 let timer: number
 const activityEvents = ['pointermove', 'pointerdown', 'keydown', 'wheel'] as const
 onMounted(() => {
+  loadLayout()
   tick()
   timer = window.setInterval(tick, 1000 * 20)
   // Ouvre le terminal au démarrage pour donner le ton.
@@ -126,10 +211,11 @@ function onDesktopClick() {
           :key="app.id"
           class="desk-icon"
           :class="{ selected: selected === app.id }"
-          @pointerdown.stop="selected = app.id"
+          :style="{ left: (iconPos[app.id]?.x ?? 14) + 'px', top: (iconPos[app.id]?.y ?? 12) + 'px' }"
+          @pointerdown.stop="iconPointerDown($event, app.id)"
           @dblclick="openApp(app)"
         >
-          <img class="glyph" :src="app.icon" alt="" />
+          <img class="glyph" :src="app.icon" alt="" draggable="false" />
           <span class="label">{{ app.label }}</span>
         </button>
       </div>
@@ -204,19 +290,14 @@ function onDesktopClick() {
 }
 
 .icons {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 4px;
-  padding: 8px;
-  height: 100%;
-  width: 100%;
+  position: absolute;
+  inset: 0;
   pointer-events: none;
 }
 .desk-icon {
+  position: absolute;
   pointer-events: auto;
-  width: 84px;
+  width: 80px;
   background: transparent;
   border: 1px dotted transparent;
   padding: 6px 4px;
@@ -226,6 +307,7 @@ function onDesktopClick() {
   gap: 4px;
   cursor: default;
   color: #fff;
+  touch-action: none;
 }
 .desk-icon.selected {
   background: rgba(49, 106, 197, 0.4);

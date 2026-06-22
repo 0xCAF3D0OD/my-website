@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
 import { profile } from '../../portfolio'
 import { articles as fallbackArticles, type Article } from '../../blog'
 
-const openApp = inject<(id: string) => void>('openApp', () => {})
-
-type View = 'login' | 'contacts' | 'blog'
+type View = 'login' | 'blog'
 const view = ref<View>('login')
 const email = ref(profile.email)
 
@@ -28,32 +26,6 @@ const avatarSrc = ref('/xp/login/avatar.jpg')
 function avatarFallback() {
   avatarSrc.value = '/xp/login/avatar.ico'
 }
-
-interface Contact {
-  name: string
-  status: string
-  online: boolean
-  href?: string
-  app?: string
-  blog?: boolean
-}
-const online = computed<Contact[]>(() => [
-  { name: '📓 Blog de Kevin', status: `${articles.value.length} article(s)`, online: true, blog: true },
-  { name: 'GitHub — @0xCAF3D0OD', status: 'mes dépôts', online: true, href: profile.github },
-  { name: 'LinkedIn', status: 'me contacter', online: true, href: profile.linkedin },
-  { name: 'alloremplacant.ch', status: 'projet en prod', online: true, href: 'https://alloremplacant.ch' },
-  { name: 'Internet Explorer', status: 'parcourir mes projets', online: true, app: 'iexplorer' },
-])
-const offline: Contact[] = [
-  { name: 'Clippy', status: 'apparaît parfois…', online: false },
-  { name: 'BSOD', status: 'tape « bsod » dans le terminal', online: false },
-]
-
-function openContact(c: Contact) {
-  if (c.blog) view.value = 'blog'
-  else if (c.app) openApp(c.app)
-  else if (c.href) window.open(c.href, '_blank', 'noopener')
-}
 </script>
 
 <template>
@@ -68,38 +40,14 @@ function openContact(c: Contact) {
         <label>Mot de passe :</label>
         <input type="password" value="********" />
         <p class="status">État : <b>En ligne</b></p>
-        <button class="connect" @click="view = 'contacts'">Se connecter</button>
+        <button class="connect" @click="view = 'blog'">Se connecter</button>
       </div>
-    </template>
-
-    <!-- Liste de contacts -->
-    <template v-else-if="view === 'contacts'">
-      <div class="me">
-        <span class="ppic"><img :src="avatarSrc" alt="" @error="avatarFallback" /></span>
-        <div class="meinfo">
-          <p class="name">{{ profile.name }} <span class="on">(En ligne)</span></p>
-          <p class="psm">« {{ profile.tagline }} »</p>
-        </div>
-      </div>
-      <div class="list">
-        <p class="group">En ligne ({{ online.length }})</p>
-        <button v-for="c in online" :key="c.name" class="contact" @click="openContact(c)">
-          <span class="dot on"></span><span class="cname">{{ c.name }}</span
-          ><span class="cstatus">— {{ c.status }}</span>
-        </button>
-        <p class="group">Hors ligne ({{ offline.length }})</p>
-        <button v-for="c in offline" :key="c.name" class="contact off" @click="openContact(c)">
-          <span class="dot"></span><span class="cname">{{ c.name }}</span
-          ><span class="cstatus">— {{ c.status }}</span>
-        </button>
-      </div>
-      <div class="msnfoot"><img src="/xp/msn/msnlogo.png" alt="" /></div>
     </template>
 
     <!-- Blog (conversation) -->
     <template v-else>
       <div class="convbar">
-        <button class="back" @click="view = 'contacts'">‹ Contacts</button>
+        <button class="back" @click="view = 'login'">‹ Déconnexion</button>
         <span class="convtitle">Blog de {{ profile.name }}</span>
       </div>
       <div class="conv">

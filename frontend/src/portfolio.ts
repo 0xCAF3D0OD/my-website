@@ -29,6 +29,12 @@ export interface ExperienceItem {
   desc: string
 }
 
+export interface EducationItem {
+  period: string
+  school: string
+  detail: string
+}
+
 export const profile: Profile = {
   name: 'Kevin Di Nocera',
   role: 'DevOps Engineer / Platform Engineer',
@@ -109,5 +115,14 @@ export const experience: ExperienceItem[] = [
     title: 'Ingénieur Systèmes',
     company: 'Entreprise',
     desc: 'Administration cloud, scripting et CI/CD.',
+  },
+]
+
+// Formation — à compléter / corriger librement.
+export const education: EducationItem[] = [
+  {
+    period: 'À compléter',
+    school: 'École 42 (Lausanne)',
+    detail: 'Cursus informatique par projets (peer-learning), spécialisation systèmes & cloud.',
   },
 ]
