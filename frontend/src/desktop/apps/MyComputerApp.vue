@@ -4,9 +4,10 @@ import { inject } from 'vue'
 const openApp = inject<(id: string) => void>('openApp', () => {})
 
 const drives = [
-  { name: 'Disque local (C:)', icon: '/xp/icons/computer.ico', sub: 'NTFS', free: '34,2 Go libres sur 80,0 Go' },
-  { name: 'Données (D:)', icon: '/xp/icons/computer.ico', sub: 'NTFS', free: '120 Go libres sur 250 Go' },
+  { name: 'Disque local (C:)', icon: '/xp/win/disk.png', free: '34,2 Go libres sur 80,0 Go', pct: 58 },
+  { name: 'Données (D:)', icon: '/xp/win/disk.png', free: '120 Go libres sur 250 Go', pct: 52 },
 ]
+const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
 </script>
 
 <template>
@@ -14,7 +15,7 @@ const drives = [
     <!-- Barre d'adresse -->
     <div class="addressbar">
       <span class="lbl">Adresse</span>
-      <div class="path"><img src="/xp/icons/computer.ico" class="mini" alt="" /> Poste de travail</div>
+      <div class="path"><img src="/xp/win/computer16.png" class="mini" alt="" /> Poste de travail</div>
     </div>
 
     <div class="body">
@@ -38,11 +39,11 @@ const drives = [
         <p class="group">Fichiers stockés sur cet ordinateur</p>
         <div class="items">
           <button class="item" @click="openApp('projects')">
-            <img src="/xp/start/mydocs.png" alt="" />
+            <img src="/xp/win/folder.png" alt="" />
             <span>Mes projets</span>
           </button>
           <button class="item" @click="openApp('about')">
-            <img src="/xp/icons/notepad.svg" alt="" />
+            <img src="/xp/win/folder.png" alt="" />
             <span>À propos de Kevin</span>
           </button>
         </div>
@@ -53,13 +54,21 @@ const drives = [
             <img :src="d.icon" alt="" />
             <span class="dn">{{ d.name }}</span>
             <span class="ds">{{ d.free }}</span>
-            <span class="bar"><i :style="{ width: '58%' }"></i></span>
+            <span class="bar"><i :style="{ width: d.pct + '%' }"></i></span>
+          </button>
+        </div>
+
+        <p class="group">Périphériques utilisant des supports amovibles</p>
+        <div class="items">
+          <button v-for="dev in devices" :key="dev.name" class="item">
+            <img :src="dev.icon" alt="" />
+            <span>{{ dev.name }}</span>
           </button>
         </div>
       </div>
     </div>
 
-    <div class="statusbar">{{ drives.length + 2 }} objet(s)</div>
+    <div class="statusbar">{{ drives.length + devices.length + 2 }} objet(s)</div>
   </div>
 </template>
 
