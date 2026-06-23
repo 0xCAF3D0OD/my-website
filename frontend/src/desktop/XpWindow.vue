@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 import { useWindows, type WinState } from './useWindows'
 
 const props = defineProps<{ win: WinState }>()
 const { focus, close, minimize, toggleMaximize } = useWindows()
+
+// Permet à un composant d'app (ex. le Démineur) de s'auto-dimensionner à son contenu.
+provide('win', props.win)
 
 const MIN_W = 240
 const MIN_H = 150

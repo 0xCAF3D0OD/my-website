@@ -4,7 +4,7 @@ import MinesweeperApp from '../../desktop/apps/MinesweeperApp.vue'
 const game: GameDef = {
   id: 'minesweeper',
   name: 'Démineur',
-  icon: '/xp/icons/mine.svg',
+  icon: '/xp/icons/mine-icon.png',
   w: 264,
   h: 350,
   component: MinesweeperApp,

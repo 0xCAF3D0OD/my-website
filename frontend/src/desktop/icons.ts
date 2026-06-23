@@ -2,7 +2,7 @@
 // Source : github.com/bartekl1/windows-ui-assets
 export const icons = {
   terminal: '/xp/icons/terminal.ico',
-  notepad: '/xp/icons/notepad.svg',
+  notepad: '/xp/icons/notepad(32x32).png',
   folder: '/xp/icons/folder.ico',
   gear: '/xp/icons/gear.ico',
   mail: '/xp/icons/mail.ico',
