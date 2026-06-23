@@ -2,10 +2,11 @@
 import { ref, reactive, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
 import { apps, type AppDef } from './registry'
 import { useWindows } from './useWindows'
-import { muted } from './sound'
+import { muted, playSound } from './sound'
 import XpWindow from './XpWindow.vue'
 import StartMenu from './StartMenu.vue'
 import ClippyAssistant from './ClippyAssistant.vue'
+import ErrorDialog from './ErrorDialog.vue'
 
 const emit = defineEmits<{ logoff: [] }>()
 const { windows, open, taskbarToggle, reset } = useWindows()
@@ -23,9 +24,18 @@ function openApp(app: AppDef) {
   startOpen.value = false
 }
 
+// Popup d'erreur « Application not found » pour les apps non implémentées.
+const errorMsg = ref<string | null>(null)
+function showError(message = 'C:\\\nApplication not found') {
+  errorMsg.value = message
+  playSound('error')
+}
+provide('showError', showError)
+
 function openById(id: string) {
   const app = apps.find((a) => a.id === id)
   if (app) open(app)
+  else showError()
 }
 // Permet aux apps (MSN, etc.) d'en ouvrir d'autres.
 provide('openApp', openById)
@@ -243,6 +253,9 @@ function onDesktopClick() {
 
     <!-- Menu Démarrer -->
     <StartMenu v-if="startOpen" @open="openApp" @logoff="logoff" @close="startOpen = false" />
+
+    <!-- Popup d'erreur « Application not found » -->
+    <ErrorDialog v-if="errorMsg" :message="errorMsg" @close="errorMsg = null" />
 
     <!-- Barre des tâches -->
     <div class="taskbar">

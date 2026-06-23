@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { inject } from 'vue'
+import { profile } from '../../portfolio'
 
 const openApp = inject<(id: string) => void>('openApp', () => {})
 
@@ -8,14 +9,44 @@ const drives = [
   { name: 'Données (D:)', icon: '/xp/win/disk.png', free: '120 Go libres sur 250 Go', pct: 52 },
 ]
 const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
+
+const linkedinUrl = profile.linkedin.startsWith('http')
+  ? profile.linkedin
+  : `https://${profile.linkedin}`
 </script>
 
 <template>
   <div class="mc">
+    <!-- Barre de fonctions (Précédent / Suivant / Dossier parent / Rechercher / Dossiers) -->
+    <div class="funcbar">
+      <div class="fb-btn disabled">
+        <img src="/xp/windowsIcons/back.png" alt="" />
+        <span>Précédent</span>
+        <i class="fb-arrow"></i>
+      </div>
+      <div class="fb-btn disabled">
+        <img src="/xp/windowsIcons/forward.png" alt="" />
+        <i class="fb-arrow"></i>
+      </div>
+      <div class="fb-btn">
+        <img class="norm" src="/xp/win/up.png" alt="Dossier parent" />
+      </div>
+      <div class="fb-sep"></div>
+      <div class="fb-btn">
+        <img class="norm" src="/xp/windowsIcons/299(32x32).png" alt="" />
+        <span>Rechercher</span>
+      </div>
+      <div class="fb-btn">
+        <img class="norm" src="/xp/win/folders.png" alt="" />
+        <span>Dossiers</span>
+      </div>
+    </div>
+
     <!-- Barre d'adresse -->
     <div class="addressbar">
       <span class="lbl">Adresse</span>
       <div class="path"><img src="/xp/win/computer16.png" class="mini" alt="" /> Poste de travail</div>
+      <button class="go"><img src="/xp/ie/go.png" class="mini" alt="" /> Aller</button>
     </div>
 
     <div class="body">
@@ -23,14 +54,46 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
       <aside class="side">
         <div class="panel">
           <p class="panel-title">Gestion du système</p>
-          <a @click="openApp('about')">Afficher les informations système</a>
-          <a @click="openApp('skills')">Compétences installées</a>
-          <a @click="openApp('iexplorer')">Ouvrir WikiDK</a>
+          <a @click="openApp('about')">
+            <img src="/xp/windowsIcons/view-info.ico" alt="" />
+            <span class="ptxt">Afficher les informations système</span>
+          </a>
+          <a @click="openApp('skills')">
+            <img src="/xp/windowsIcons/302(16x16).png" alt="" />
+            <span class="ptxt">Ajouter ou supprimer des programmes</span>
+          </a>
+          <a @click="openApp('iexplorer')">
+            <img src="/xp/windowsIcons/ie.png" alt="" />
+            <span class="ptxt">Ouvrir WikiDK</span>
+          </a>
         </div>
         <div class="panel">
           <p class="panel-title">Autres emplacements</p>
-          <a @click="openApp('projects')">Mes projets</a>
-          <a @click="openApp('guestbook')">Me contacter</a>
+          <a @click="openApp('projects')">
+            <img src="/xp/windowsIcons/308(16x16).png" alt="" />
+            <span class="ptxt">Mes projets</span>
+          </a>
+          <a @click="openApp('skills')">
+            <img src="/xp/windowsIcons/300(16x16).png" alt="" />
+            <span class="ptxt">Panneau de configuration</span>
+          </a>
+          <a @click="openApp('guestbook')">
+            <img src="/xp/windowsIcons/mail.png" alt="" />
+            <span class="ptxt">Me contacter</span>
+          </a>
+        </div>
+        <div class="panel">
+          <p class="panel-title">Détails</p>
+          <p class="detail-name">{{ profile.name }}</p>
+          <p class="detail-role">{{ profile.role }}</p>
+          <a :href="profile.github" target="_blank" rel="noreferrer">
+            <img src="/xp/windowsIcons/earth.png" alt="" />
+            <span class="ptxt">GitHub</span>
+          </a>
+          <a :href="linkedinUrl" target="_blank" rel="noreferrer">
+            <img src="/xp/windowsIcons/links.png" alt="" />
+            <span class="ptxt">LinkedIn</span>
+          </a>
         </div>
       </aside>
 
@@ -65,6 +128,22 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
             <span>{{ dev.name }}</span>
           </button>
         </div>
+
+        <p class="group">À propos de moi :)</p>
+        <div class="items">
+          <a class="item me" :href="profile.github" target="_blank" rel="noreferrer">
+            <img src="/xp/windowsIcons/earth.png" alt="" />
+            <span>GitHub</span>
+          </a>
+          <a class="item me" :href="linkedinUrl" target="_blank" rel="noreferrer">
+            <img src="/xp/windowsIcons/links.png" alt="" />
+            <span>LinkedIn</span>
+          </a>
+          <button class="item me" @click="openApp('contact')">
+            <img src="/xp/start/emailoutlook.png" alt="" />
+            <span>Me contacter</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -80,6 +159,61 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
   background: #fff;
   font-family: Tahoma, 'Noto Sans', sans-serif;
 }
+
+/* Barre de fonctions */
+.funcbar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  height: 34px;
+  padding: 1px 4px 0;
+  background: linear-gradient(to bottom, #f6f5ee 0%, #e9e6da 100%);
+  border-bottom: 1px solid #d6d3ce;
+  flex-shrink: 0;
+  font-size: 11px;
+}
+.fb-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+.fb-btn:not(.disabled):hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.08);
+}
+.fb-btn.disabled {
+  filter: grayscale(1);
+  opacity: 0.55;
+  cursor: default;
+}
+.fb-btn img {
+  width: 30px;
+  height: 30px;
+}
+.fb-btn img.norm {
+  width: 22px;
+  height: 22px;
+}
+.fb-arrow {
+  width: 0;
+  height: 0;
+  border: 3px solid transparent;
+  border-bottom: 0;
+  border-top-color: #000;
+}
+.fb-sep {
+  width: 1px;
+  height: 80%;
+  margin: 0 3px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
 .addressbar {
   display: flex;
   align-items: center;
@@ -102,6 +236,21 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
   border: 1px solid #9aa0a6;
   padding: 2px 6px;
   font-size: 12px;
+}
+.go {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 12px;
+  color: #1a1a1a;
+  cursor: pointer;
+}
+.go:hover {
+  border-color: rgba(0, 0, 0, 0.15);
 }
 .mini {
   width: 14px;
@@ -135,15 +284,38 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
   padding-bottom: 3px;
 }
 .panel a {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
   font-size: 12px;
   color: #1c4587;
   cursor: pointer;
   padding: 2px 0;
+  text-decoration: none;
+}
+.panel a img {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  object-fit: contain;
 }
 .panel a:hover {
   color: #d35400;
+}
+.panel a:hover .ptxt {
   text-decoration: underline;
+}
+.detail-name {
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+  color: #0a1835;
+}
+.detail-role {
+  margin: 0 0 5px;
+  font-size: 11px;
+  color: #555;
 }
 .content {
   flex: 1;
@@ -175,6 +347,7 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
   padding: 6px 8px;
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
 }
 .item:hover {
   background: #e8f0fe;
@@ -189,6 +362,10 @@ const devices = [{ name: 'Lecteur CD (E:)', icon: '/xp/win/cd.png' }]
 .item span {
   font-size: 12px;
   color: #111;
+}
+.item.me img {
+  width: 26px;
+  height: 26px;
 }
 .item.drive {
   flex-wrap: wrap;
