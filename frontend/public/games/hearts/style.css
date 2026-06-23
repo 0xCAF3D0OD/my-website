@@ -786,8 +786,20 @@ input[type="number"] { color: #000; }
 	background: transparent !important;
 	background-image: none !important;
 }
-/* Noms des joueurs masqués (simplifie le plateau) */
-.player-name { display: none !important; }
+.player-name {
+	background: transparent !important;
+	background-image: none !important;
+	box-shadow: none !important;
+	border-radius: 0;
+	width: auto;
+	padding: 0 2px;
+	margin: 2px 6px;
+	color: #000;
+	font-family: 'MS Sans Serif', Tahoma, Arial, sans-serif;
+	font-weight: bold;
+	text-align: left;
+	text-shadow: none;
+}
 /* Score courant masqué pendant la partie (comme l'original) ; le bilan de fin reste */
 .player-score { display: none !important; }
 /* Joueur actif : léger surlignage du nom au lieu du halo bleu pulsant */
