@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, inject, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, computed, inject, onMounted, onBeforeUnmount } from 'vue'
 import type { WinState } from '../useWindows'
 
 interface Cell {
@@ -50,6 +50,15 @@ function fitWindow() {
   win.h = inner.offsetHeight + chromeH
 }
 
+// On mesure après le recalcul de mise en page (rAF), avec une 2ᵉ passe pour
+// converger : à la 1re passe la fenêtre déborde encore, ce qui fausserait le chrome.
+function scheduleFit() {
+  requestAnimationFrame(() => {
+    fitWindow()
+    requestAnimationFrame(fitWindow)
+  })
+}
+
 function changeLevel(next: Level) {
   const config = configs[next]
   rows.value = config.r
@@ -58,7 +67,7 @@ function changeLevel(next: Level) {
   level.value = next
   menuOpen.value = false
   reset()
-  nextTick(fitWindow)
+  scheduleFit()
 }
 
 function toggleMenu(event: MouseEvent) {
@@ -281,7 +290,7 @@ const numColor = [
 ]
 
 reset()
-onMounted(() => nextTick(fitWindow))
+onMounted(scheduleFit)
 onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
