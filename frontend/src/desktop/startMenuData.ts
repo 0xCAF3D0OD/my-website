@@ -96,7 +96,7 @@ export const allProgramsMenu: StartMenuEntry[] = [
         ],
       },
       { type: 'item', icon: xpIcon('554(16x16).png'), label: "Carnet d'adresses" },
-      { type: 'item', icon: xpIcon('56(16x16).png'), label: 'Invite de commandes', app: 'terminal' },
+      { type: 'item', icon: xpIcon('invite_cmd.png'), label: 'Invite de commandes', app: 'terminal' },
       { type: 'item', icon: xpIcon('327(16x16).png'), label: 'Bloc-notes', app: 'about' },
       { type: 'item', icon: xpIcon('680(16x16).png'), label: 'Paint' },
       { type: 'item', icon: xpIcon('74(16x16).png'), label: 'Calculatrice' },
