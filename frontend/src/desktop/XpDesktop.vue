@@ -7,6 +7,7 @@ import XpWindow from './XpWindow.vue'
 import StartMenu from './StartMenu.vue'
 import ClippyAssistant from './ClippyAssistant.vue'
 import ErrorDialog from './ErrorDialog.vue'
+import TrayBalloon from './TrayBalloon.vue'
 
 const emit = defineEmits<{ logoff: [] }>()
 const { windows, open, taskbarToggle, reset } = useWindows()
@@ -291,6 +292,9 @@ function onDesktopClick() {
         />
         <span class="tray-clock">{{ clock }}</span>
       </div>
+
+      <!-- Bulle de notification façon XP, au-dessus de la zone de notification -->
+      <TrayBalloon />
     </div>
 
     <!-- Assistant -->
