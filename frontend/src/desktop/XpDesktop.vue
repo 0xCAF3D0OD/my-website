@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
 import { apps, type AppDef } from './registry'
-import { useWindows } from './useWindows'
+import { useWindows, type WinState } from './useWindows'
 import { muted, playSound } from './sound'
 import XpWindow from './XpWindow.vue'
 import StartMenu from './StartMenu.vue'
@@ -206,35 +206,37 @@ function logoff() {
 function tick() {
   clock.value = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 }
+// Centre une fenêtre dans la zone du bureau et la borne pour qu'elle tienne à
+// l'écran (évite le débordement des grandes fenêtres et le scroll horizontal).
+function placeCentered(w: WinState, dx = 0, dy = 0) {
+  const area = document.querySelector('.area') as HTMLElement | null
+  const cw = area?.clientWidth ?? window.innerWidth
+  const ch = area?.clientHeight ?? window.innerHeight
+  w.w = Math.min(w.w, cw - 32)
+  w.h = Math.min(w.h, ch - 32)
+  w.x = Math.max(12, Math.round((cw - w.w) / 2) + dx)
+  w.y = Math.max(12, Math.round((ch - w.h) / 2) + dy)
+}
+
 let timer: number
 const activityEvents = ['pointermove', 'pointerdown', 'keydown', 'wheel'] as const
 onMounted(() => {
   loadLayout()
   tick()
   timer = window.setInterval(tick, 1000 * 20)
-  // Ouvre le terminal au démarrage pour donner le ton.
+  // Fenêtres d'ouverture, centrées et bornées à l'écran (pas de débordement) :
+  // terminal pour donner le ton, IExplorer (bio WikiDK), et l'accueil au-dessus.
   const term = apps.find((a) => a.id === 'terminal')
   const iexplorer = apps.find((a) => a.id === 'iexplorer')
-  if (term) open(term)
-  if (iexplorer) open(iexplorer)
-  // Fenêtre « Mise en route » au premier plan : raccourci rapide vers l'essentiel.
   const welcome = apps.find((a) => a.id === 'welcome')
+  if (term) placeCentered(open(term), -28, -22)
+  if (iexplorer) placeCentered(open(iexplorer))
+  // « Mise en route » : raccourci rapide vers l'essentiel, au premier plan.
   if (welcome) {
     const w = open(welcome)
-    // Centrée à l'écran, en compensant un éventuel scroll horizontal de .area
-    // (focus d'une fenêtre large). On recalcule plusieurs fois car ce scroll
-    // peut se produire après le 1er rendu.
-    const centerWelcome = () => {
-      const area = document.querySelector('.area') as HTMLElement | null
-      const sl = area?.scrollLeft ?? 0
-      const cw = area?.clientWidth ?? window.innerWidth
-      const ch = area?.clientHeight ?? window.innerHeight
-      w.x = Math.max(20, Math.round((cw - w.w) / 2) + sl)
-      w.y = Math.max(20, Math.round((ch - w.h) / 2) - 24)
-    }
-    requestAnimationFrame(centerWelcome)
-    setTimeout(centerWelcome, 250)
-    setTimeout(centerWelcome, 700)
+    placeCentered(w, 0, -8)
+    // Re-centre une fois le layout stabilisé (sécurité).
+    requestAnimationFrame(() => placeCentered(w, 0, -8))
   }
   activityEvents.forEach((e) => window.addEventListener(e, resetIdle))
   resetIdle()
