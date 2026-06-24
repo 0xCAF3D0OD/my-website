@@ -98,7 +98,7 @@ const steps = [
         <section class="card">
           <h2 class="card-title">Choisir une rubrique d'aide</h2>
           <ul class="topics">
-            <li v-for="t in helpTopics" :key="t.label" class="topic">
+            <li v-for="t in helpTopics" :key="t.label" class="topic unavailable">
               <img :src="t.icon" alt="" />
               <a>{{ t.label }}</a>
             </li>
@@ -110,7 +110,7 @@ const steps = [
         <section class="card">
           <h2 class="card-title">Demander de l'assistance</h2>
           <ul class="links">
-            <li v-for="a in askAssistance" :key="a.label" class="link">
+            <li v-for="a in askAssistance" :key="a.label" class="link" :class="{ unavailable: !a.go }">
               <img :src="a.icon" alt="" />
               <a :class="{ clickable: a.go }" @click="a.go && (view = a.go)">{{ a.label }}</a>
             </li>
@@ -120,7 +120,7 @@ const steps = [
         <section class="card">
           <h2 class="card-title">Choisir une tâche</h2>
           <ul class="links">
-            <li v-for="t in pickTask" :key="t.label" class="link">
+            <li v-for="t in pickTask" :key="t.label" class="link unavailable">
               <img :src="t.icon" alt="" />
               <a>{{ t.label }}</a>
             </li>
@@ -324,6 +324,21 @@ const steps = [
 }
 .link a:not(.clickable) {
   cursor: default;
+}
+/* Rubriques/tâches non disponibles : légèrement grisées */
+.topic.unavailable a,
+.link.unavailable a {
+  color: #9a9a9a;
+  cursor: default;
+}
+.topic.unavailable a:hover,
+.link.unavailable a:hover {
+  color: #9a9a9a;
+  text-decoration: none;
+}
+.topic.unavailable img,
+.link.unavailable img {
+  opacity: 0.45;
 }
 .didyouknow p {
   margin: 0;

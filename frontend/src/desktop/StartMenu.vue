@@ -109,6 +109,7 @@ function pick(appId: string | null) {
             v-for="p in places"
             :key="p.label"
             class="item bold"
+            :class="{ unavailable: !p.app }"
             @mouseenter="openCascade = null"
             @click="pick(p.app)"
           >
@@ -138,6 +139,7 @@ function pick(appId: string | null) {
             v-for="t in tools"
             :key="t.label"
             class="item"
+            :class="{ unavailable: !t.app }"
             @mouseenter="openCascade = null"
             @click="pick(t.app)"
           >
@@ -279,6 +281,19 @@ ul {
 .item:hover {
   background: #2f71cd;
   color: #fff;
+}
+/* Élément non disponible (pas encore implémenté) : légèrement grisé */
+.item.unavailable {
+  color: #9a9a9a;
+}
+.item.unavailable img {
+  opacity: 0.4;
+}
+.item.unavailable:hover {
+  color: #fff;
+}
+.item.unavailable:hover img {
+  opacity: 1;
 }
 .left .item img {
   width: 30px;

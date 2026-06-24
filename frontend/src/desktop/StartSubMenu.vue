@@ -18,6 +18,7 @@ const openIdx = ref(-1)
       <div
         v-else-if="e.type === 'item'"
         class="ssm-item"
+        :class="{ unavailable: !e.app }"
         @mouseenter="openIdx = -1"
         @click="emit('pick', e.app ?? null)"
       >
@@ -78,6 +79,19 @@ const openIdx = ref(-1)
   width: 16px;
   height: 16px;
   object-fit: contain;
+}
+/* Entrées non disponibles (pas encore implémentées) : légèrement grisées */
+.ssm-item.unavailable .ssm-text {
+  color: #9a9a9a;
+}
+.ssm-item.unavailable img {
+  opacity: 0.4;
+}
+.ssm-item.unavailable:hover .ssm-text {
+  color: #fff;
+}
+.ssm-item.unavailable:hover img {
+  opacity: 1;
 }
 .ssm-text {
   font-size: 11px;
