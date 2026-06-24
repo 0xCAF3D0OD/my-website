@@ -10,6 +10,7 @@ import MsnApp from './apps/MsnApp.vue'
 import MyComputerApp from './apps/MyComputerApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import HelpSupportApp from './apps/HelpSupportApp.vue'
+import WelcomeApp from './apps/WelcomeApp.vue'
 import { icons } from './icons'
 import { games } from '../games/registry'
 import { pdfViewer } from './pdfViewer'
@@ -123,6 +124,15 @@ export const apps: AppDef[] = [
     component: MyComputerApp,
     w: 620,
     h: 440,
+  },
+  {
+    id: 'welcome',
+    label: 'Mise en route',
+    title: 'Bienvenue',
+    icon: '/xp/start/help.png',
+    component: WelcomeApp,
+    w: 560,
+    h: 360,
   },
   {
     id: 'help',

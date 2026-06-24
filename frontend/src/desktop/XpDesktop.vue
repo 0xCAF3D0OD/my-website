@@ -44,7 +44,7 @@ provide('openApp', openById)
 provide('openWindow', (def: AppDef) => open(def))
 // Apps volontairement absentes du bureau (restent accessibles via le menu
 // Démarrer) — pour garder le bureau centré sur l'essentiel « qui je suis ».
-const HIDDEN_DESKTOP = new Set(['game-hearts', 'help', 'game-morpion', 'contact', 'msn'])
+const HIDDEN_DESKTOP = new Set(['game-hearts', 'help', 'game-morpion', 'contact', 'msn', 'welcome'])
 const desktopApps = computed(() => apps.filter((a) => !HIDDEN_DESKTOP.has(a.id)))
 
 // --- Icônes du bureau : disposition en groupes + déplacement (persisté) ---
@@ -217,6 +217,25 @@ onMounted(() => {
   const iexplorer = apps.find((a) => a.id === 'iexplorer')
   if (term) open(term)
   if (iexplorer) open(iexplorer)
+  // Fenêtre « Mise en route » au premier plan : raccourci rapide vers l'essentiel.
+  const welcome = apps.find((a) => a.id === 'welcome')
+  if (welcome) {
+    const w = open(welcome)
+    // Centrée à l'écran, en compensant un éventuel scroll horizontal de .area
+    // (focus d'une fenêtre large). On recalcule plusieurs fois car ce scroll
+    // peut se produire après le 1er rendu.
+    const centerWelcome = () => {
+      const area = document.querySelector('.area') as HTMLElement | null
+      const sl = area?.scrollLeft ?? 0
+      const cw = area?.clientWidth ?? window.innerWidth
+      const ch = area?.clientHeight ?? window.innerHeight
+      w.x = Math.max(20, Math.round((cw - w.w) / 2) + sl)
+      w.y = Math.max(20, Math.round((ch - w.h) / 2) - 24)
+    }
+    requestAnimationFrame(centerWelcome)
+    setTimeout(centerWelcome, 250)
+    setTimeout(centerWelcome, 700)
+  }
   activityEvents.forEach((e) => window.addEventListener(e, resetIdle))
   resetIdle()
 })
