@@ -39,7 +39,7 @@ const tasks = [
   {
     label: 'Explorer le bureau',
     desc: 'Pour les curieux : terminal, jeux, explorateur… à la sauce Windows XP.',
-    icon: '/xp/tray/xplogo.png',
+    icon: '/xp/windoors-2.svg',
     onClick: () => closeSelf(),
   },
 ]
@@ -49,7 +49,7 @@ const tasks = [
   <div class="welcome">
     <!-- Volet latéral d'accueil -->
     <aside class="welcome-side">
-      <img class="welcome-flag" src="/xp/tray/xplogo.png" alt="" />
+      <img class="welcome-flag" src="/xp/windoors-2.svg" alt="" />
       <p class="welcome-hi">Bienvenue</p>
       <p class="welcome-name">{{ profile.name }}</p>
       <p class="welcome-role">{{ profile.role }}</p>
