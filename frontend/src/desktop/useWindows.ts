@@ -39,7 +39,7 @@ function open(app: AppDef): WinState {
     title: app.title,
     icon: app.icon,
     component: markRaw(app.component),
-    x: 56 + (n % 6) * 28,
+    x: 500 + (n % 6) * 28,
     y: 32 + (n % 6) * 28,
     w: app.w,
     h: app.h,

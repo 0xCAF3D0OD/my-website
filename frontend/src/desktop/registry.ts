@@ -31,8 +31,8 @@ export const apps: AppDef[] = [
     title: 'Portfolio — Internet Explorer',
     icon: icons.iexplorer,
     component: IExplorerApp,
-    w: 740,
-    h: 540,
+    w: 840,
+    h: 840,
   },
   {
     id: 'terminal',

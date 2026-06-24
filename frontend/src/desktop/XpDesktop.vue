@@ -214,7 +214,9 @@ onMounted(() => {
   timer = window.setInterval(tick, 1000 * 20)
   // Ouvre le terminal au démarrage pour donner le ton.
   const term = apps.find((a) => a.id === 'terminal')
+  const iexplorer = apps.find((a) => a.id === 'iexplorer')
   if (term) open(term)
+  if (iexplorer) open(iexplorer)
   activityEvents.forEach((e) => window.addEventListener(e, resetIdle))
   resetIdle()
 })

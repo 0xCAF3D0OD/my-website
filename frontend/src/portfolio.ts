@@ -52,6 +52,21 @@ export const about: string[] = [
   "déployé en production. Passionné par l'automatisation, l'évolutivité et les outils maison.",
 ]
 
+export const about_biography: string[] = [
+  "Diplômé de l'école 42 (Lausanne), je possède une solide expérience en tant que " +
+  "DevOps / Platform Engineer, principalement acquise durant mon stage au sein du " +
+  "groupe NAGRA Kudelski. Au sein de l'équipe SRE de la branche IoT, " +
+  "ainsi que par mes multiples projets personnels, " +
+  "j'ai développé une expertise que je valide actuellement par la préparation de " +
+  "la certification CKA (Certified Kubernetes Administrator)." +
+  "Passionné par l'automatisation, l'évolutivité et la cybersécurité, " +
+  "j'ai plusieurs CTF à mon actif, notamment Insomni'hack et Black Alps. " +
+  "Grand amateur de sport, j'ai fait partie de la sélection nationale d'athlétisme (4x100m) et " +
+  "suis multimédaillé national sur 100m et 200m. Et détenteur du record cantonal sur 100 mètres." +
+  "Je suis également médaillé d'argent avec la Bobteam Kuonen " +
+  "lors des championnats suisses de bobsleigh à St-Moritz en 2019."
+]
+
 export const skills: SkillGroup[] = [
   { group: 'Cloud', items: ['AWS', 'Azure', 'OpenStack'] },
   { group: 'IaC', items: ['Terraform', 'Ansible'] },
@@ -111,18 +126,27 @@ export const experience: ExperienceItem[] = [
       "Résultat : Réduction du temps d'analyse des projets par l'équipe SRE de 1-3 min à 2-5 secondes.",
   },
   {
-    period: '2021 — 2023',
-    title: 'Ingénieur Systèmes',
-    company: 'Entreprise',
-    desc: 'Administration cloud, scripting et CI/CD.',
+    period: '08.01.2024 — 08.07.2024',
+    title: 'Web Developer stage',
+    company: 'Retraites Populaires',
+    desc:
+      "Développement d'un POC pour optimiser l'expérience utilisateur du site Erentes.\n" +
+      "Création d'une console back-office (Vue.js, TypeScript, PHP, PostgreSQL) avec automatisation\n" +
+      'du déploiement via Jenkins.',
   },
 ]
 
 // Formation — à compléter / corriger librement.
 export const education: EducationItem[] = [
   {
-    period: 'À compléter',
+    period: '2021 - 2023',
     school: 'École 42 (Lausanne)',
-    detail: 'Cursus informatique par projets (peer-learning), spécialisation systèmes & cloud.',
+    detail:
+      'Cursus informatique par projets (peer-learning), spécialisation systèmes & cloud.' +
+      "est un campus de formation en informatique innovant, situé au cœur du parc scientifique de " +
+      "l'EPFL (Ecublens/Lausanne). Membre du réseau mondial d'écoles 42, elle propose " +
+      "un cursus d'excellence en développement informatique totalement gratuit, " +
+      "sans cours magistraux, sans professeurs et ouvert à tous, quels que soient " +
+      "les diplômes antérieurs.",
   },
 ]

@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted, inject } from 'vue'
-import { projects, profile, about, experience, education, skills } from '../../portfolio'
+import {
+  projects,
+  profile,
+  about,
+  experience,
+  education,
+  skills,
+  about_biography,
+} from '../../portfolio'
 
 const openApp = inject<(id: string) => void>('openApp', () => {})
 
@@ -85,6 +93,45 @@ function forward() {
 function goHome() {
   navigate(home)
 }
+
+function parseBioText(text: string) {
+  // Remplacez vos mots-clés par des balises HTML avec un événement @click
+  // Note: Pour que @click fonctionne, il est préférable de rendre le texte en composants
+  // Mais pour faire simple, on peut utiliser des balises <a> avec un window.open
+  return text
+    .replace(
+      'école 42',
+      '<a href="#" onclick="window.open(\'https://42lausanne.ch/fr/\', \'_blank\'); return false;">école 42</a>',
+    )
+    .replace(
+      'groupe NAGRA Kudelski.',
+      '<a href="#" onclick="window.open(\'https://www.nagra.com/\', \'_blank\'); return false;">groupe NAGRA Kudelski.</a>',
+    )
+    .replace(
+      "Insomni'hack",
+      "<a href=\"#\" onclick=\"window.open('https://ctftime.org/event/2271/\', '_blank'); return false;\">Insomni'hack</a>",
+    )
+    .replace(
+      'Black Alps',
+      '<a href="#" onclick="window.open(\'https://blackalps.ch/\', \'_blank\'); return false;">Black Alps</a>',
+    )
+    .replace(
+      'CKA (Certified Kubernetes Administrator)',
+      '<a href="#" onclick="window.open(\'https://www.cncf.io/certification/cka/\', ' +
+        "'_blank'); return false;\">CKA (Certified Kubernetes Administrator)</a>",
+    )
+    .replace(
+      'Bobteam Kuonen',
+      '<a href="#" onclick="window.open(\'https://www.facebook.com/michaelkuonen/?locale=fr_FR/\', ' +
+        "'_blank'); return false;\">Bobteam Kuonen</a>",
+    )
+    .replace(
+      'détenteur du record cantonal sur 100 mètres.',
+      '<a href="#" onclick="window.open(\'https://www.lenouvelliste.ch/athletisme-kevin-di-nocera-bat-le-' +
+        "record-valaisan-du-100-metres-852665/', '_blank'); return false;\">détenteur du record cantonal sur 100 mètres.</a>",
+    )
+}
+
 function openProject(i: number) {
   const p = projects[i]!
   navigate({ url: `${wikiUrl}/projets/${p.name}`, title: p.name, kind: 'project', projectIndex: i })
@@ -380,7 +427,7 @@ const activeCustom = computed(() =>
             </p>
 
             <h2 id="bio">Biographie</h2>
-            <p v-for="(p, i) in about" :key="i">{{ p }}</p>
+            <p v-for="(p, i) in about_biography" :key="i" v-html="parseBioText(p)"></p>
 
             <h2 id="parcours">Parcours professionnel</h2>
             <ul class="timeline">
@@ -611,6 +658,13 @@ const activeCustom = computed(() =>
   background: #f6f6f6;
   border-right: 1px solid #e8e8e8;
 }
+/* Supprime le soulignement pour les liens dans le wiki */
+.wiki-main a {
+  color: #0645ad;
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .logo {
   text-align: center;
   margin-bottom: 12px;
