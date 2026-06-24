@@ -9,6 +9,7 @@ import IExplorerApp from './apps/IExplorerApp.vue'
 import MsnApp from './apps/MsnApp.vue'
 import MyComputerApp from './apps/MyComputerApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
+import HelpSupportApp from './apps/HelpSupportApp.vue'
 import { icons } from './icons'
 import { games } from '../games/registry'
 import { pdfViewer } from './pdfViewer'
@@ -122,6 +123,15 @@ export const apps: AppDef[] = [
     component: MyComputerApp,
     w: 620,
     h: 440,
+  },
+  {
+    id: 'help',
+    label: 'Aide et support',
+    title: "Centre d'aide et de support",
+    icon: '/xp/start/help.png',
+    component: HelpSupportApp,
+    w: 700,
+    h: 520,
   },
   {
     id: 'bin',
