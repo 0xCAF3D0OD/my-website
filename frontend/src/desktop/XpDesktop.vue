@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick, provide } from 'vue'
 import { apps, type AppDef } from './registry'
 import { useWindows } from './useWindows'
 import { muted, playSound } from './sound'
@@ -42,20 +42,25 @@ function openById(id: string) {
 provide('openApp', openById)
 // Permet au lanceur de jeux d'ouvrir une fenêtre dynamique (jeu non listé dans apps).
 provide('openWindow', (def: AppDef) => open(def))
+// Apps volontairement absentes du bureau (restent accessibles via le menu
+// Démarrer) — pour garder le bureau centré sur l'essentiel « qui je suis ».
+const HIDDEN_DESKTOP = new Set(['game-hearts', 'help', 'game-morpion', 'contact', 'msn'])
+const desktopApps = computed(() => apps.filter((a) => !HIDDEN_DESKTOP.has(a.id)))
+
 // --- Icônes du bureau : disposition en groupes + déplacement (persisté) ---
 // Chaque sous-tableau = une colonne thématique.
 const iconGroups: string[][] = [
-  ['terminal', 'iexplorer', 'msn'], // profil & compétences
+  ['terminal', 'iexplorer'], // profil & compétences
   ['about', 'cv-fr', 'cv-en'],
   ['skills', 'projects'], // documents PDF
-  ['contact', 'guestbook'], // me contacter
-  ['game-minesweeper', 'game-morpion', 'bin'], // jeux & annexes
+  ['guestbook'], // me contacter
+  ['game-minesweeper', 'bin'], // jeux & annexes
 ]
 const X0 = 14
 const Y0 = 12
 const COL_W = 92
 const ROW_H = 80
-const LS_KEY = 'desktop-icons-v1'
+const LS_KEY = 'desktop-icons-v2'
 const iconPos = reactive<Record<string, { x: number; y: number }>>({})
 
 function defaultLayout(): Record<string, { x: number; y: number }> {
@@ -64,7 +69,7 @@ function defaultLayout(): Record<string, { x: number; y: number }> {
   iconGroups.forEach((g, gi) => {
     let ri = 0
     g.forEach((id) => {
-      if (apps.some((a) => a.id === id)) {
+      if (desktopApps.value.some((a) => a.id === id)) {
         pos[id] = {
           x: X0 + ri * ROW_H,
           y: Y0 + gi * 2 * COL_W,
@@ -75,7 +80,7 @@ function defaultLayout(): Record<string, { x: number; y: number }> {
     })
   })
   let extra = 0
-  apps.forEach((a) => {
+  desktopApps.value.forEach((a) => {
     if (!placed.has(a.id)) {
       pos[a.id] = {
         x: X0 + iconGroups.length * COL_W,
@@ -94,7 +99,7 @@ function loadLayout() {
     saved = {}
   }
   const def = defaultLayout()
-  apps.forEach((a) => {
+  desktopApps.value.forEach((a) => {
     iconPos[a.id] = saved[a.id] || def[a.id] || { x: X0, y: Y0 }
   })
 }
@@ -232,7 +237,7 @@ function onDesktopClick() {
       <!-- Icônes du bureau -->
       <div class="icons">
         <button
-          v-for="app in apps"
+          v-for="app in desktopApps"
           :key="app.id"
           class="desk-icon"
           :class="{ selected: selected === app.id }"
