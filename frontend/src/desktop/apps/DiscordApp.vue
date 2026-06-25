@@ -13,7 +13,7 @@ import { profile } from '../../portfolio'
 //    « Copier l'identifiant »).
 //  - Il faut aussi inviter le bot WidgetBot sur ton serveur : https://widgetbot.io
 const DISCORD_SERVER_ID = '1519700730435604480'
-const DISCORD_CHANNEL_ID = ''
+const DISCORD_CHANNEL_ID = '1519700731022540986'
 
 const chatUrl = computed(() =>
   DISCORD_SERVER_ID && DISCORD_CHANNEL_ID
