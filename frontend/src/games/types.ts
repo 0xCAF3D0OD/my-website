@@ -2,6 +2,13 @@ import { defineComponent, h, type Component } from 'vue'
 
 // Définition d'un jeu. Chaque jeu vit dans src/games/<nom>/ et exporte par défaut
 // un GameDef depuis un fichier `game.ts`. Il est découvert automatiquement (voir registry.ts).
+// Aide / règles d'un jeu, affichées via le bouton « ? » au-dessus du jeu.
+export interface GameHelp {
+  title?: string
+  intro?: string
+  sections: { heading: string; lines: string[] }[]
+}
+
 export interface GameDef {
   id: string
   name: string
@@ -9,6 +16,7 @@ export interface GameDef {
   w?: number
   h?: number
   component: Component // composant Vue du jeu
+  rules?: GameHelp // règles affichées par le bouton « ? » (absent = pas d'aide)
 }
 
 // Aide pour intégrer un jeu HTML5 externe via une iframe.

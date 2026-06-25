@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import { defineComponent, h, markRaw, type Component } from 'vue'
 import TerminalConsole from '../components/TerminalConsole.vue'
 import AboutApp from './apps/AboutApp.vue'
 import ProjectsApp from './apps/ProjectsApp.vue'
@@ -16,6 +16,21 @@ import ControlPanelApp from './apps/ControlPanelApp.vue'
 import { icons } from './icons'
 import { games } from '../games/registry'
 import { pdfViewer } from './pdfViewer'
+import GameFrame from './GameFrame.vue'
+import type { GameDef } from '../games/types'
+
+// Encadre un jeu d'un bouton « ? » (règles) si le jeu fournit des `rules`.
+function withHelp(g: GameDef): Component {
+  const comp = g.component
+  const rules = g.rules
+  if (!rules) return comp
+  return markRaw(
+    defineComponent({
+      name: 'GameWithHelp',
+      setup: () => () => h(GameFrame, { component: comp, rules }),
+    }),
+  )
+}
 
 export interface AppDef {
   id: string
@@ -171,7 +186,7 @@ export const apps: AppDef[] = [
       label: g.name,
       title: g.name,
       icon: g.icon || icons.games,
-      component: g.component,
+      component: withHelp(g),
       w: g.w ?? 520,
       h: g.h ?? 440,
     }),
