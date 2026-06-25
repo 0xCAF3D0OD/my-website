@@ -45,6 +45,7 @@ provide('openWindow', (def: AppDef) => open(def))
 // Apps volontairement absentes du bureau (restent accessibles via le menu
 // Démarrer) — pour garder le bureau centré sur l'essentiel « qui je suis ».
 const HIDDEN_DESKTOP = new Set([
+  'game-pinball',
   'game-hearts',
   'help',
   'game-morpion',

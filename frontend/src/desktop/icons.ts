@@ -1,9 +1,9 @@
 // Icônes authentiques Windows XP (shell32.dll) servies depuis public/xp/icons.
 // Source : github.com/bartekl1/windows-ui-assets
 export const icons = {
-  terminal: '/xp/icons/invite_cmd.png',
+  terminal: '/xp/WindowsXPIconsSVG/Command Prompt.svg',
   notepad: '/xp/icons/notepad(32x32).png',
-  folder: '/xp/icons/folder.ico',
+  folder: '/xp/WindowsXPIconsSVG/My Documents.svg',
   gear: '/xp/icons/gear.ico',
   mail: '/xp/icons/mail.ico',
   bin: '/xp/icons/bin.ico',
