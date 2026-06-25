@@ -114,19 +114,16 @@
 				{
 				document.getElementById("canvas").style.height = (window.innerHeight + 20) + "px";
 
-				// CHECKING IF THE GAME IS NOT RUNNING WITHIN AN IFRAME
-				if (window.top == window.self)
+				// Le jeu est auto-hébergé : on autorise le chargement même en iframe.
+				document.getElementsByClassName("gui_start")[0].addEventListener("click", function(event)
 					{
-					document.getElementsByClassName("gui_start")[0].addEventListener("click", function(event)
-						{
-						document.getElementsByClassName("gui_container")[0].style.display = "none";
-						document.getElementsByClassName("pleasewait")[0].style.display = "block";
+					document.getElementsByClassName("gui_container")[0].style.display = "none";
+					document.getElementsByClassName("pleasewait")[0].style.display = "block";
 
-						const scriptGame = document.createElement("script");
-						scriptGame.src = "3DPinballSpaceCadet.js";
-						document.getElementsByTagName("body")[0].appendChild(scriptGame);
-						});
-					}
+					const scriptGame = document.createElement("script");
+					scriptGame.src = "3DPinballSpaceCadet.js";
+					document.getElementsByTagName("body")[0].appendChild(scriptGame);
+					});
 				});
 
 			window.addEventListener("resize", function()

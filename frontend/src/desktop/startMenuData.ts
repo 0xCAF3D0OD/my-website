@@ -139,7 +139,7 @@ export const allProgramsMenu: StartMenuEntry[] = [
         label: 'Minesweeper',
         app: 'game-minesweeper',
       },
-      { type: 'item', icon: xpIcon('pinball.png'), label: 'Pinball', app: 'game-pineball' },
+      { type: 'item', icon: xpIcon('pinball.png'), label: 'Pinball', app: 'game-pinball' },
       { type: 'item', icon: xpIcon('890(16x16).png'), label: 'Internet Pinball' },
       { type: 'item', icon: xpIcon('solitaire.png'), label: 'Solitaire' },
       { type: 'item', icon: xpIcon('spider.png'), label: 'Spider Solitaire' },
