@@ -15,7 +15,7 @@ import { profile } from '../../portfolio'
 const DISCORD_SERVER_ID = '1519700730435604480'
 const DISCORD_CHANNEL_ID = '1519700731022540986'
 // Lien d'invitation permanent (discord.gg/…) pour le bouton « Rejoindre ».
-const DISCORD_INVITE_URL = ''
+const DISCORD_INVITE_URL = 'https://discord.gg/Zr3M4DscHz'
 
 const chatUrl = computed(() =>
   DISCORD_SERVER_ID && DISCORD_CHANNEL_ID
@@ -120,11 +120,7 @@ const email = ref(profile.email)
       <!-- Bandeau bas façon XP : bouton « Rejoindre » -->
       <div class="msn-foot">
         <span class="msn-foot-label">Rejoins mon serveur Discord</span>
-        <button
-          class="msn-join"
-          :class="{ inert: !DISCORD_INVITE_URL }"
-          @click="joinServer"
-        >
+        <button class="msn-join" :class="{ inert: !DISCORD_INVITE_URL }" @click="joinServer">
           Rejoindre ↗
         </button>
       </div>
