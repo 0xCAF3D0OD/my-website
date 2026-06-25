@@ -17,7 +17,7 @@ function avatarFallback() {
 
 const byId = (id: string) => apps.find((a) => a.id === id)!
 const pinned = ['terminal', 'about'].map(byId)
-const frequent = ['projects', 'skills', 'contact', 'bin'].map(byId)
+const frequent = ['projects', 'controlpanel', 'contact', 'iexplorer', 'mycomputer'].map(byId)
 
 // Cascade ouverte au survol : « Tous les programmes », « Documents récents »
 // ou « Se connecter à ». null = aucune.

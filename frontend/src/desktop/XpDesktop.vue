@@ -51,7 +51,7 @@ const HIDDEN_DESKTOP = new Set([
   'contact',
   'msn',
   'welcome',
-  'controlpanel',
+  // 'controlpanel',
 ])
 const desktopApps = computed(() => apps.filter((a) => !HIDDEN_DESKTOP.has(a.id)))
 
@@ -60,7 +60,7 @@ const desktopApps = computed(() => apps.filter((a) => !HIDDEN_DESKTOP.has(a.id))
 const iconGroups: string[][] = [
   ['terminal', 'iexplorer'], // profil & compétences
   ['about', 'cv-fr', 'cv-en'],
-  ['skills', 'projects'], // documents PDF
+  ['controlpanel', 'projects'], // documents PDF
   ['guestbook'], // me contacter
   ['game-minesweeper', 'bin'], // jeux & annexes
 ]

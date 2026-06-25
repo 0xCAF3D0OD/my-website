@@ -64,15 +64,6 @@ export const apps: AppDef[] = [
     h: 440,
   },
   {
-    id: 'skills',
-    label: 'Compétences',
-    title: 'Compétences',
-    icon: icons.gear,
-    component: SkillsApp,
-    w: 540,
-    h: 420,
-  },
-  {
     id: 'contact',
     label: 'Contact',
     title: 'Contact',
@@ -128,8 +119,8 @@ export const apps: AppDef[] = [
   },
   {
     id: 'controlpanel',
-    label: 'Panneau de configuration',
-    title: 'Panneau de configuration',
+    label: 'Panneau des compétences',
+    title: 'Panneau des compétences',
     icon: '/xp/start/controll.png',
     component: ControlPanelApp,
     w: 640,
