@@ -6,7 +6,8 @@ import SkillsApp from './apps/SkillsApp.vue'
 import ContactApp from './apps/ContactApp.vue'
 import GuestbookApp from './apps/GuestbookApp.vue'
 import IExplorerApp from './apps/IExplorerApp.vue'
-import MsnApp from './apps/MsnApp.vue'
+import MessengerApp from './apps/MessengerApp.vue'
+import DiscordApp from './apps/DiscordApp.vue'
 import MyComputerApp from './apps/MyComputerApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import HelpSupportApp from './apps/HelpSupportApp.vue'
@@ -82,13 +83,22 @@ export const apps: AppDef[] = [
     h: 460,
   },
   {
+    id: 'messenger',
+    label: 'Windows Messenger',
+    title: 'Windows Messenger',
+    icon: '/xp/WindowsXPIconsSVG/Windows Messenger.svg',
+    component: MessengerApp,
+    w: 560,
+    h: 460,
+  },
+  {
     id: 'msn',
-    label: 'MSN Messenger',
-    title: 'MSN Messenger',
+    label: 'MSN',
+    title: 'MSN',
     icon: icons.msn,
-    component: MsnApp,
-    w: 330,
-    h: 480,
+    component: DiscordApp,
+    w: 420,
+    h: 520,
   },
   {
     id: 'cv-fr',

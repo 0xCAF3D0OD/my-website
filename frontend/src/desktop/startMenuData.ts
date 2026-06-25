@@ -156,6 +156,6 @@ export const allProgramsMenu: StartMenuEntry[] = [
   { type: 'item', icon: xpIcon('887(16x16).png'), label: 'Outlook Express', app: 'guestbook' },
   { type: 'item', icon: xpIcon('357(16x16).png'), label: 'Assistance à distance' },
   { type: 'item', icon: xpIcon('846(16x16).png'), label: 'Lecteur Windows Media' },
-  { type: 'item', icon: xpIcon('msn.png'), label: 'Windows Messenger', app: 'msn' },
+  { type: 'item', icon: xpIcon('msn.png'), label: 'Windows Messenger', app: 'messenger' },
   { type: 'item', icon: xpIcon('894(16x16).png'), label: 'Windows Movie Maker' },
 ]

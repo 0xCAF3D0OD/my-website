@@ -14,7 +14,8 @@ const tips: Tip[] = [
   { text: 'Curieux des projets de Kevin ? Ouvre Internet Explorer.', action: { label: 'Ouvrir Internet', app: 'iexplorer' } },
   { text: 'Psst… le terminal cache des commandes secrètes. Essaie « help ».', action: { label: 'Ouvrir le terminal', app: 'terminal' } },
   { text: 'Tu veux contacter Kevin ? Ouvre le formulaire (tu peux joindre un fichier).', action: { label: 'Me contacter', app: 'guestbook' } },
-  { text: 'Tu peux me retrouver sur MSN Messenger', action: { label: 'Ouvrir MSN', app: 'msn' } },
+  { text: 'Découvre le blog de Kevin dans Windows Messenger.', action: { label: 'Ouvrir Windows Messenger', app: 'messenger' } },
+  { text: 'Rejoins le Discord de Kevin via MSN.', action: { label: 'Ouvrir MSN', app: 'msn' } },
 ]
 
 const seq = (dir: string, count: number) =>

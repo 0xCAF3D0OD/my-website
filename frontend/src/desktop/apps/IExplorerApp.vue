@@ -275,10 +275,10 @@ const toolbarSections = computed<ToolbarButton[][]>(() => [
     { key: 'edit', title: 'Modifier', icon: '/xp/ie/edit.png', disabled: true },
     {
       key: 'msn',
-      title: 'Messenger',
+      title: 'Windows Messenger',
       icon: '/xp/ie/msn.png',
       iconClass: 'sm12',
-      onClick: () => openApp('msn'),
+      onClick: () => openApp('messenger'),
     },
   ],
 ])
