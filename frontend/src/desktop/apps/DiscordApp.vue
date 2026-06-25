@@ -14,12 +14,18 @@ import { profile } from '../../portfolio'
 //  - Il faut aussi inviter le bot WidgetBot sur ton serveur : https://widgetbot.io
 const DISCORD_SERVER_ID = '1519700730435604480'
 const DISCORD_CHANNEL_ID = '1519700731022540986'
+// Lien d'invitation permanent (discord.gg/…) pour le bouton « Rejoindre ».
+const DISCORD_INVITE_URL = ''
 
 const chatUrl = computed(() =>
   DISCORD_SERVER_ID && DISCORD_CHANNEL_ID
     ? `https://e.widgetbot.io/channels/${DISCORD_SERVER_ID}/${DISCORD_CHANNEL_ID}`
     : '',
 )
+
+function joinServer() {
+  if (DISCORD_INVITE_URL) window.open(DISCORD_INVITE_URL, '_blank', 'noopener')
+}
 
 const view = ref<'signin' | 'online'>('signin')
 const email = ref(profile.email)
@@ -109,6 +115,18 @@ const email = ref(profile.email)
             </li>
           </ol>
         </div>
+      </div>
+
+      <!-- Bandeau bas façon XP : bouton « Rejoindre » -->
+      <div class="msn-foot">
+        <span class="msn-foot-label">Rejoins mon serveur Discord</span>
+        <button
+          class="msn-join"
+          :class="{ inert: !DISCORD_INVITE_URL }"
+          @click="joinServer"
+        >
+          Rejoindre ↗
+        </button>
       </div>
     </template>
   </div>
@@ -318,6 +336,45 @@ const email = ref(profile.email)
   height: 100%;
   border: 0;
   display: block;
+}
+
+/* Bandeau bas + bouton « Rejoindre » façon Windows XP (luna) */
+.msn-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: linear-gradient(to bottom, #f1f6fd, #d7e4f4);
+  border-top: 1px solid #9cc0e9;
+  flex-shrink: 0;
+}
+.msn-foot-label {
+  flex: 1;
+  font-size: 11px;
+  color: #355;
+}
+.msn-join {
+  font-family: Tahoma, 'Noto Sans', sans-serif;
+  font-size: 12px;
+  color: #000;
+  padding: 3px 14px;
+  border: 1px solid #003c74;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #fefefe 0%, #eef3fb 48%, #d8e4f4 52%, #eaf1fb 100%);
+  box-shadow: inset 0 0 0 1px #fff;
+  cursor: pointer;
+}
+.msn-join:hover {
+  border-color: #e9a900;
+  background: linear-gradient(to bottom, #fffefb 0%, #fff3d6 48%, #ffe6a8 52%, #fff2cf 100%);
+}
+.msn-join:active {
+  background: linear-gradient(to bottom, #d8e4f4, #eef3fb);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+.msn-join.inert {
+  filter: grayscale(1);
+  opacity: 0.5;
 }
 .msn-setup {
   height: 100%;
