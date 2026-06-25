@@ -93,7 +93,7 @@ export const apps: AppDef[] = [
     label: 'Projets',
     title: 'Projets',
     icon: icons.folder,
-    component: folderApp('projects'),
+    component: ProjectsApp,
     w: 620,
     h: 440,
   },
