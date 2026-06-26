@@ -55,7 +55,6 @@ export interface AppDef {
   component: Component
   w: number
   h: number
-  frameless?: boolean // fenêtre sans chrome XP (barre de titre / bordure bleue)
 }
 
 export const apps: AppDef[] = [

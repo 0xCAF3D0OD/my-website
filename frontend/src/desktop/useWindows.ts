@@ -15,7 +15,6 @@ export interface WinState {
   z: number
   minimized: boolean
   maximized: boolean
-  frameless: boolean
 }
 
 let uid = 0
@@ -47,7 +46,6 @@ function open(app: AppDef): WinState {
     z: ++topZ,
     minimized: false,
     maximized: false,
-    frameless: app.frameless ?? false,
   })
   windows.push(win)
   playSound(app.id === 'bin' ? 'recycle' : 'restore')
