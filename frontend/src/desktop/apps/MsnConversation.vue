@@ -104,16 +104,18 @@ async function send() {
       ><span>Format</span><span>Outils</span><span>Message</span><span>?</span>
     </div>
 
-    <!-- Barre d'outils (actions MSN) -->
+    <!-- Barre d'outils (icônes MSN authentiques) -->
     <div class="toolbar">
-      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Inviter</span></button>
+      <button class="tbtn"><img src="/xp/msn/chat/tb_invite.png" alt="" /><span>Inviter</span></button>
       <button class="tbtn">
-        <img src="/xp/msn/msnexplorer.png" alt="" /><span>Envoyer des fichiers</span>
+        <img src="/xp/msn/chat/tb_sendfiles.png" alt="" /><span>Envoyer des fichiers</span>
       </button>
-      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Webcam</span></button>
-      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Audio</span></button>
-      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Activités</span></button>
-      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Jeux</span></button>
+      <button class="tbtn"><img src="/xp/msn/chat/tb_webcam.png" alt="" /><span>Webcam</span></button>
+      <button class="tbtn"><img src="/xp/msn/chat/tb_audio.png" alt="" /><span>Audio</span></button>
+      <button class="tbtn">
+        <img src="/xp/msn/chat/tb_activities.png" alt="" /><span>Activités</span>
+      </button>
+      <button class="tbtn"><img src="/xp/msn/chat/tb_games.png" alt="" /><span>Jeux</span></button>
     </div>
 
     <!-- Destinataire -->
@@ -507,13 +509,13 @@ async function send() {
   font-weight: normal;
 }
 
-/* Images d'affichage */
+/* Images d'affichage : contact en haut, expéditeur en bas (aligné avec la saisie) */
 .dp {
   width: 96px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
 }
 .dp-frame {
   width: 96px;
