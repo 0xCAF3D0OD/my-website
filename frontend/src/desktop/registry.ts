@@ -7,6 +7,7 @@ import GuestbookApp from './apps/GuestbookApp.vue'
 import IExplorerApp from './apps/IExplorerApp.vue'
 import MessengerApp from './apps/MessengerApp.vue'
 import DiscordApp from './apps/DiscordApp.vue'
+import MsnConversation from './apps/MsnConversation.vue'
 import MyComputerApp from './apps/MyComputerApp.vue'
 import RecycleBinApp from './apps/RecycleBinApp.vue'
 import HelpSupportApp from './apps/HelpSupportApp.vue'
@@ -129,6 +130,15 @@ export const apps: AppDef[] = [
     component: DiscordApp,
     w: 360,
     h: 560,
+  },
+  {
+    id: 'msn-chat',
+    label: 'Conversation',
+    title: 'Conversation — MSN Messenger',
+    icon: icons.msn,
+    component: MsnConversation,
+    w: 540,
+    h: 480,
   },
   {
     id: 'cv-fr',

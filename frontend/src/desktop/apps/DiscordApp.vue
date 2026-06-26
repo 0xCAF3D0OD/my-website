@@ -1,56 +1,43 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, inject } from 'vue'
 import { profile } from '../../portfolio'
+import { msnEmail, DISCORD_INVITE_URL } from '../msnSession'
 
-// MSN — interface MSN Messenger (écran de connexion → chat). Le « chat » est en
-// réalité le serveur Discord de Kevin, intégré via WidgetBot (affiche les vrais
-// messages, contrairement au widget Discord officiel qui ne montre que les
-// membres en ligne).
-//
-// CONFIG :
-//  - DISCORD_SERVER_ID : l'ID de ton serveur Discord.
-//  - DISCORD_CHANNEL_ID : l'ID du salon à afficher (clic droit sur le salon →
-//    « Copier l'identifiant »).
-//  - Il faut aussi inviter le bot WidgetBot sur ton serveur : https://widgetbot.io
-const DISCORD_SERVER_ID = '1519700730435604480'
-const DISCORD_CHANNEL_ID = '1519700731022540986'
-// Lien d'invitation permanent (discord.gg/…) pour le bouton « Rejoindre ».
-const DISCORD_INVITE_URL = 'https://discord.gg/Zr3M4DscHz'
-
-const chatUrl = computed(() =>
-  DISCORD_SERVER_ID && DISCORD_CHANNEL_ID
-    ? `https://e.widgetbot.io/channels/${DISCORD_SERVER_ID}/${DISCORD_CHANNEL_ID}`
-    : '',
-)
-
-function joinServer() {
-  if (DISCORD_INVITE_URL) window.open(DISCORD_INVITE_URL, '_blank', 'noopener')
-}
+// Fenêtre principale MSN Messenger : connexion puis liste de contacts. Le contact
+// « Kevin » ouvre une fenêtre de conversation (→ Discord via webhook).
+const openApp = inject<(id: string) => void>('openApp', () => {})
 
 const view = ref<'signin' | 'online'>('signin')
 const email = ref(profile.email)
+
+function signIn() {
+  msnEmail.value = email.value
+  view.value = 'online'
+}
+function openConversation() {
+  openApp('msn-chat')
+}
+function joinServer() {
+  if (DISCORD_INVITE_URL) window.open(DISCORD_INVITE_URL, '_blank', 'noopener')
+}
 </script>
 
 <template>
   <div class="msn">
-    <!-- Barre de menus (inerte) -->
+    <!-- Barre de menus -->
     <div class="msn-menu">
-      <span class="inert">Fichier</span>
-      <span class="inert">Contacts</span>
-      <span class="inert">Actions</span>
-      <span class="inert">Outils</span>
-      <span class="inert">?</span>
+      <span>Fichier</span><span>Contacts</span><span>Actions</span><span>Outils</span><span>?</span>
     </div>
 
     <!-- En-tête msn Messenger -->
     <div class="msn-brand">
-      <img src="/xp/msn/msnlogo.png" alt="msn Messenger" />
+      <img src="/xp/winxp-icons/MSN-Logo-2000.png" alt="msn Messenger" />
     </div>
 
     <!-- ÉCRAN DE CONNEXION -->
     <template v-if="view === 'signin'">
       <div class="msn-signin">
-        <div class="msn-avatar"><img src="/xp/msn/windowsmesenger.png" alt="" /></div>
+        <div class="msn-avatar"><img src="/xp/WindowsXPIconsSVG/MSN Messenger.svg" alt="" /></div>
 
         <label>Adresse e-mail :</label>
         <div class="msn-field">
@@ -67,7 +54,7 @@ const email = ref(profile.email)
         <label class="msn-check"><input type="checkbox" /> Mémoriser mon mot de passe</label>
         <label class="msn-check"><input type="checkbox" /> Me connecter automatiquement</label>
 
-        <button class="msn-signinbtn" @click="view = 'online'">Se connecter</button>
+        <button class="msn-signinbtn" @click="signIn">Se connecter</button>
 
         <div class="msn-links">
           <a class="inert">Mot de passe oublié ?</a>
@@ -75,7 +62,7 @@ const email = ref(profile.email)
           <a class="inert">Obtenir un compte</a>
         </div>
 
-        <div class="msn-buddies"><img src="/xp/msn/windowsmesenger.png" alt="" /></div>
+        <div class="msn-buddies"><img src="/xp/WindowsXPIconsSVG/MSN Messenger.svg" alt="" /></div>
       </div>
       <div class="msn-passport">
         <img src="/xp/msn/msnexplorer.png" alt="" />
@@ -83,46 +70,47 @@ const email = ref(profile.email)
       </div>
     </template>
 
-    <!-- CONNECTÉ : le serveur Discord (via WidgetBot) -->
+    <!-- CONNECTÉ : liste de contacts -->
     <template v-else>
-      <div class="msn-online-head">
-        <img class="msn-online-pp" src="/xp/login/avatar.jpg" alt="" />
-        <div>
-          <p class="msn-online-name">{{ profile.name }} <span>(En ligne)</span></p>
-          <p class="msn-online-msg">Discutez avec moi sur Discord ↓</p>
-        </div>
-        <button class="msn-signout inert" @click="view = 'signin'">Déconnexion</button>
-      </div>
-
-      <div class="msn-chat">
-        <iframe
-          v-if="chatUrl"
-          :src="chatUrl"
-          title="Discord"
-          allow="clipboard-write; fullscreen"
-        ></iframe>
-        <div v-else class="msn-setup">
-          <p class="msn-setup-title">Chat Discord à activer</p>
-          <p class="msn-setup-text">
-            Pour afficher les messages, j'utilise <b>WidgetBot</b> (le widget Discord officiel ne
-            montre que les membres en ligne, pas les messages) :
+      <div class="msn-me">
+        <img class="msn-me-pp" src="/xp/WindowsXPIconsSVG/MSN Messenger.svg" alt="" />
+        <div class="msn-me-id">
+          <p class="msn-me-name">
+            {{ email || 'Visiteur' }} <span>(En ligne)</span> <span class="msn-caret">▾</span>
           </p>
-          <ol class="msn-setup-steps">
-            <li>Invite le bot WidgetBot sur ton serveur : <code>widgetbot.io</code>.</li>
-            <li>
-              Renseigne <code>DISCORD_CHANNEL_ID</code> dans <code>DiscordApp.vue</code> (clic droit
-              sur le salon → « Copier l'identifiant »).
-            </li>
-          </ol>
+          <p class="msn-me-msg">&lt;Tapez un message personnel&gt;</p>
         </div>
       </div>
 
-      <!-- Bandeau bas façon XP : bouton « Rejoindre » -->
-      <div class="msn-foot">
-        <span class="msn-foot-label">Rejoins mon serveur Discord</span>
-        <button class="msn-join" :class="{ inert: !DISCORD_INVITE_URL }" @click="joinServer">
-          Rejoindre ↗
+      <div class="msn-addbar">
+        <img src="/xp/winxp-icons/msn.png" alt="" />
+        <a class="inert">Ajouter un contact</a>
+      </div>
+
+      <!-- Liste -->
+      <div class="msn-list">
+        <p class="msn-group">▾ Contacts en ligne (1)</p>
+        <button class="msn-contact online" @dblclick="openConversation" @click="openConversation">
+          <img class="msn-contact-ic" src="/xp/winxp-icons/msn.png" alt="" />
+          <span class="msn-contact-name">{{ profile.name }}</span>
+          <span class="msn-contact-state">(En ligne)</span>
         </button>
+
+        <p class="msn-group">▾ Hors ligne (0)</p>
+        <p class="msn-empty">Aucun contact hors ligne.</p>
+      </div>
+
+      <!-- Bandeau .net -->
+      <div class="msn-net">
+        <img src="/xp/msn/msnlogo.png" alt="msn .net" />
+      </div>
+
+      <!-- Pied : rejoindre Discord -->
+      <div class="msn-foot">
+        <span class="msn-foot-label"
+          >Écris à {{ profile.name.split(' ')[0] }} (double-clic) — ça arrive sur son Discord.</span
+        >
+        <button class="msn-join" @click="joinServer">Rejoindre ↗</button>
       </div>
     </template>
   </div>
@@ -141,6 +129,10 @@ const email = ref(profile.email)
 .inert {
   color: #9a9a9a;
 }
+.msn-caret {
+  color: #4f7bbf;
+  font-size: 10px;
+}
 
 /* Barre de menus */
 .msn-menu {
@@ -152,7 +144,7 @@ const email = ref(profile.email)
   flex-shrink: 0;
 }
 .msn-menu span {
-  cursor: pointer;
+  cursor: default;
 }
 
 /* En-tête msn Messenger */
@@ -205,10 +197,6 @@ const email = ref(profile.email)
   font-size: 12px;
   padding: 3px 18px 3px 5px;
   border: 1px solid #7f9db9;
-}
-.msn-caret {
-  color: #4f7bbf;
-  font-size: 10px;
 }
 .msn-field .msn-caret {
   position: absolute;
@@ -283,58 +271,121 @@ const email = ref(profile.email)
   height: 16px;
 }
 
-/* Connecté : bandeau MSN + chat Discord */
-.msn-online-head {
+/* Connecté : mon identité */
+.msn-me {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 10px;
-  background: linear-gradient(to bottom, #eaf3ff, #cfe4fb);
-  border-bottom: 1px solid #9cc0e9;
+  padding: 4px 10px 6px;
   flex-shrink: 0;
 }
-.msn-online-pp {
-  width: 38px;
-  height: 38px;
+.msn-me-pp {
+  width: 40px;
+  height: 40px;
   border: 1px solid #9bb8d8;
   border-radius: 4px;
-  object-fit: cover;
+  background: #fff;
+  padding: 2px;
 }
-.msn-online-name {
+.msn-me-name {
   margin: 0;
   font-weight: bold;
   color: #15317e;
 }
-.msn-online-name span {
+.msn-me-name span:first-of-type {
   font-weight: normal;
   color: #2a8a2a;
   font-size: 11px;
 }
-.msn-online-msg {
+.msn-me-msg {
   margin: 1px 0 0;
   font-size: 11px;
-  color: #555;
-}
-.msn-signout {
-  margin-left: auto;
-  background: transparent;
-  border: none;
-  font-size: 11px;
-  cursor: pointer;
-}
-.msn-chat {
-  flex: 1;
-  min-height: 0;
-  background: #36393f;
-}
-.msn-chat iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
+  color: #888;
 }
 
-/* Bandeau bas + bouton « Rejoindre » façon Windows XP (luna) */
+.msn-addbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-top: 1px solid #cfe0f3;
+  border-bottom: 1px solid #cfe0f3;
+  background: #eef5ff;
+  flex-shrink: 0;
+}
+.msn-addbar img {
+  width: 16px;
+  height: 16px;
+}
+.msn-addbar a {
+  color: #1c5fd6;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Liste de contacts */
+.msn-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 6px;
+  background: #fff;
+}
+.msn-group {
+  margin: 4px 0 2px;
+  font-weight: bold;
+  font-size: 11px;
+  color: #15317e;
+  cursor: default;
+}
+.msn-contact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 6px 2px 16px;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 12px;
+}
+.msn-contact:hover {
+  background: #e8f0fe;
+  border-color: #b6c8e8;
+}
+.msn-contact-ic {
+  width: 16px;
+  height: 16px;
+}
+.msn-contact-name {
+  color: #111;
+}
+.msn-contact-state {
+  color: #2a8a2a;
+  font-size: 11px;
+}
+.msn-empty {
+  margin: 2px 0 6px 16px;
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* Bandeau .net */
+.msn-net {
+  flex-shrink: 0;
+  padding: 6px;
+  background: linear-gradient(to bottom, #eef5ff, #d4e6fb);
+  border-top: 1px solid #9cc0e9;
+  display: flex;
+  justify-content: center;
+}
+.msn-net img {
+  height: 26px;
+  object-fit: contain;
+}
+
+/* Pied : rejoindre Discord façon XP */
 .msn-foot {
   display: flex;
   align-items: center;
@@ -367,43 +418,5 @@ const email = ref(profile.email)
 .msn-join:active {
   background: linear-gradient(to bottom, #d8e4f4, #eef3fb);
   box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-.msn-join.inert {
-  filter: grayscale(1);
-  opacity: 0.5;
-}
-.msn-setup {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding: 20px 24px;
-  background: #fff;
-  color: #333;
-}
-.msn-setup-title {
-  margin: 0;
-  font-size: 14px;
-  font-weight: bold;
-  color: #15317e;
-}
-.msn-setup-text {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.msn-setup-steps {
-  margin: 0;
-  padding-left: 20px;
-  font-size: 12px;
-  line-height: 1.6;
-}
-.msn-setup code {
-  background: #eef2fb;
-  border: 1px solid #d3def0;
-  border-radius: 3px;
-  padding: 0 3px;
-  font-size: 11px;
 }
 </style>

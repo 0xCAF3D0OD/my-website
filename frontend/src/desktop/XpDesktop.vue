@@ -65,6 +65,7 @@ const HIDDEN_DESKTOP = new Set([
   'game-morpion',
   'contact',
   'msn',
+  'msn-chat',
   'messenger',
   'welcome',
   'webamp',
