@@ -20,6 +20,7 @@ const isSending = ref(false)
 const editor = ref<HTMLTextAreaElement>()
 const historyBox = ref<HTMLElement>()
 const showEmojis = ref(false)
+const mode = ref<'hand' | 'type'>('type')
 
 function now() {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -106,10 +107,13 @@ async function send() {
     <!-- Barre d'outils (actions MSN) -->
     <div class="toolbar">
       <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Inviter</span></button>
-      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Fichiers</span></button>
-      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Voix</span></button>
-      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Activités</span></button>
-      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Jeux</span></button>
+      <button class="tbtn">
+        <img src="/xp/msn/msnexplorer.png" alt="" /><span>Envoyer des fichiers</span>
+      </button>
+      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Webcam</span></button>
+      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Audio</span></button>
+      <button class="tbtn"><img src="/xp/winxp-icons/msn.png" alt="" /><span>Activités</span></button>
+      <button class="tbtn"><img src="/xp/msn/msnexplorer.png" alt="" /><span>Jeux</span></button>
     </div>
 
     <!-- Destinataire -->
@@ -137,7 +141,8 @@ async function send() {
 
         <!-- Barre de mise en forme -->
         <div class="format">
-          <button class="fbtn font" title="Police"><b>A</b></button>
+          <button class="fbtn font" title="Police"><b>A</b> Police</button>
+          <span class="fsep"></span>
           <div class="emoji-wrap">
             <button class="fbtn" title="Émoticônes" @pointerdown.stop="showEmojis = !showEmojis">
               <img :src="emoticonUrl(111)" alt="" /><span class="caret">▾</span>
@@ -154,7 +159,10 @@ async function send() {
               </button>
             </div>
           </div>
-          <button class="fbtn" title="Clin d'œil"><span class="wink">;-)</span><span class="caret">▾</span></button>
+          <button class="fbtn" title="Clins d'œil">
+            <span class="wink">;-)</span> Clins d'œil <span class="caret">▾</span>
+          </button>
+          <button class="fbtn" title="Insérer une image"><span class="pic">🖼</span></button>
           <button class="fbtn" title="Signal sonore"><span class="nudge">[!]</span></button>
         </div>
 
@@ -167,6 +175,16 @@ async function send() {
             @keydown.enter.exact.prevent="send"
           ></textarea>
           <button class="send" :disabled="isSending" @click="send">Envoyer</button>
+        </div>
+
+        <!-- Onglets bas (Manuscrit / Clavier) façon MSN -->
+        <div class="modes">
+          <button class="mode" :class="{ active: mode === 'hand' }" @click="mode = 'hand'">
+            Manuscrit
+          </button>
+          <button class="mode" :class="{ active: mode === 'type' }" @click="mode = 'type'">
+            Clavier
+          </button>
         </div>
       </div>
 
@@ -349,6 +367,37 @@ async function send() {
 }
 .fbtn .nudge {
   color: #c00;
+  font-weight: bold;
+}
+.fbtn .pic {
+  font-size: 13px;
+}
+.fsep {
+  width: 1px;
+  height: 16px;
+  background: #c5d6ea;
+  margin: 0 2px;
+}
+
+/* Onglets Manuscrit / Clavier */
+.modes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.mode {
+  padding: 2px 12px;
+  font-size: 11px;
+  color: #15317e;
+  border: 1px solid #9cc0e9;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  background: #dbe8f7;
+  cursor: pointer;
+}
+.mode.active {
+  background: #fff;
   font-weight: bold;
 }
 

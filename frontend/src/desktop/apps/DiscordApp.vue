@@ -82,9 +82,10 @@ function joinServer() {
         </div>
       </div>
 
-      <div class="msn-addbar">
-        <img src="/xp/winxp-icons/msn.png" alt="" />
-        <a class="inert">Ajouter un contact</a>
+      <!-- Liens E-mail / MSN Today -->
+      <div class="msn-quick">
+        <a class="inert"><img src="/xp/msn/msnexplorer.png" alt="" /> E-mail</a>
+        <a class="inert"><img src="/xp/winxp-icons/msn.png" alt="" /> MSN Aujourd'hui</a>
       </div>
 
       <!-- Liste -->
@@ -98,6 +99,18 @@ function joinServer() {
 
         <p class="msn-group">▾ Hors ligne (0)</p>
         <p class="msn-empty">Aucun contact hors ligne.</p>
+      </div>
+
+      <!-- Ajouter un contact -->
+      <div class="msn-addbar">
+        <img src="/xp/winxp-icons/msn.png" alt="" />
+        <a class="inert">Ajouter un contact</a>
+      </div>
+
+      <!-- Barre de recherche -->
+      <div class="msn-search">
+        <input type="text" placeholder="Rechercher sur le Web…" />
+        <button class="inert">Rechercher</button>
       </div>
 
       <!-- Bandeau .net -->
@@ -303,14 +316,35 @@ function joinServer() {
   color: #888;
 }
 
+.msn-quick {
+  display: flex;
+  gap: 16px;
+  padding: 4px 10px;
+  border-top: 1px solid #cfe0f3;
+  border-bottom: 1px solid #cfe0f3;
+  background: #eef5ff;
+  flex-shrink: 0;
+}
+.msn-quick a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #1c5fd6;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 11px;
+}
+.msn-quick img {
+  width: 14px;
+  height: 14px;
+}
 .msn-addbar {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border-top: 1px solid #cfe0f3;
-  border-bottom: 1px solid #cfe0f3;
   background: #eef5ff;
+  border-top: 1px solid #cfe0f3;
   flex-shrink: 0;
 }
 .msn-addbar img {
@@ -320,6 +354,27 @@ function joinServer() {
 .msn-addbar a {
   color: #1c5fd6;
   text-decoration: underline;
+  cursor: pointer;
+}
+.msn-search {
+  display: flex;
+  gap: 4px;
+  padding: 5px 10px;
+  background: #eef5ff;
+  border-top: 1px solid #cfe0f3;
+  flex-shrink: 0;
+}
+.msn-search input {
+  flex: 1;
+  font-size: 11px;
+  padding: 2px 5px;
+  border: 1px solid #7f9db9;
+}
+.msn-search button {
+  font-size: 11px;
+  padding: 2px 8px;
+  border: 1px solid #7f9db9;
+  background: linear-gradient(to bottom, #fff, #dee7f6);
   cursor: pointer;
 }
 
