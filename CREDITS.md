@@ -52,6 +52,19 @@ packs d'icônes.
   ~39 raccourcis classiques (`:)`, `(L)`, `(Y)`, `:D`…) rendus en images inline.
 - Les messages envoyés sont relayés vers un **salon Discord** (webhook).
 
+### Assistant Clippy
+- Animation **fluide** via un **sprite map unique + données Microsoft Agent** (durée
+  exacte de chaque frame + branches aléatoires), au lieu d'un PNG par frame → idles
+  variés et naturels. On garde nos astuces/actions propres au portfolio.
+
+### Économiseur d'écran
+- Remplacé le logo rebondissant par les vrais **« 3D Pipes »** de Windows (recréation
+  Three.js), servis en iframe plein écran ; toute activité le ferme.
+
+### Blog (dans « Windows Messenger »)
+- Support des **photos** en plus du texte : champ `images` par article, photos déposées
+  dans `public/blog/photos/`, affichées en vignettes cliquables (ouverture en grand).
+
 ---
 
 ## 2. Dépôts GitHub utilisés comme modèle ou source
@@ -60,7 +73,8 @@ packs d'icônes.
 |---|---|---|
 | **msnchat-rs** (fourni : `msn-emoticone.zip`) | [Réutilisé] | Les **80 émoticônes MSN authentiques** (bitmaps Microsoft `BITMAP*.bmp`, convertis en PNG → `public/xp/msn/emoticons/`). |
 | **modernlivemessenger.com.br** (fourni : `modernlivemessenger.com.br-main.zip`) — clone web MSN (Vite + 7.css) | [Réutilisé] | Les **vraies icônes** de la conversation MSN : barre de format (`change_font`, `select_emoticon`, `select_wink`, `select_background`, `send_nudge`, `editortab`, `arrow`) et barre d'outils (Inviter, Envoyer des fichiers, Webcam, Audio, Activités, Jeux) → `public/xp/msn/chat/`. Structure de la zone d'écriture aussi inspirée de ce dépôt. |
-| **react-xp** — <https://github.com/Cyanoxide/react-xp> (fourni : `react-xp-main.zip`) | [Référence] | Bureau XP en React. **Pas de composant MSN** : conservé comme référence pour de futures améliorations (composants génériques `XPScrollbars`, `WindowMenu`, `Window`, `Login`). |
+| **react-xp** — <https://github.com/Cyanoxide/react-xp> (fourni : `react-xp-main.zip`) | [Réutilisé] (Clippy) + [Référence] | **Assistant Clippy** : on a repris son sprite map (`clippy/spritemap.png`) et ses données Microsoft Agent (`clippyAgent.json`) pour une animation fluide. Pas de composant MSN : le reste (composants génériques `XPScrollbars`, `WindowMenu`, `Window`, `Login`) reste une référence pour la suite. |
+| **1j01/pipes** — <https://github.com/1j01/pipes> (fourni : `pipes-master.zip`) — recréation Three.js du « 3D Pipes » de Windows | [Réutilisé] | L'**économiseur d'écran** entier (`public/pipes/`), servi en iframe. MIT. |
 | **msn-chatbot** (fourni : `msn-chatbot-main.zip`) — backend **Elixir** reliant un vrai client MSN 8.5 (escargot.chat) à ChatGPT | [Référence] | Aucune interface web ; ses captures d'écran ont servi à comprendre la structure de la fenêtre de conversation MSN. |
 | **RebornXP / BINX-XPerience** — <https://github.com/Binxy111/BINX-XPerience> | [Référence] | Étudié en amont pour comprendre l'organisation « bureau XP dans le navigateur » (système de fichiers en arbre, Explorer générique, dossiers = My Computer). A inspiré notre Explorer/dossiers, sans copie de code. |
 
@@ -72,6 +86,7 @@ packs d'icônes.
 |---|---|---|
 | **Webamp** | Lecteur Winamp (chargé via CDN unpkg `webamp@1.5.0`) | <https://github.com/captbaritone/webamp> — MIT |
 | **Butterchurn** + **butterchurn-presets** | Visualiseur Milkdrop de Winamp (CDN unpkg) | <https://github.com/jberg/butterchurn> — MIT |
+| **Three.js** | Rendu 3D de l'économiseur « 3D Pipes » (via 1j01/pipes) | <https://threejs.org> — MIT |
 | **Web3Forms** | Envoi du formulaire de contact (Outlook Express) par e-mail | <https://web3forms.com> |
 | **Webhook Discord** | Relaye les messages MSN du visiteur vers un salon Discord | — |
 
