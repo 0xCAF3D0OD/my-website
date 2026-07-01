@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject } from 'vue'
+import { inject, reactive } from 'vue'
 
 // Centre de sécurité Windows (reproduction fidèle de la fenêtre XP). Un clic sur
 // « Protection antivirus » (INTROUVABLE) lance le simulateur d'erreurs.
@@ -7,6 +7,12 @@ const SVG = '/xp/WindowsXPIconsSVG/'
 const launchWinError = inject<() => void>('launchWinError', () => {})
 function launch() {
   launchWinError()
+}
+
+// Chaque section peut se déplier/replier (flèche en haut = ouvert, en bas = fermé).
+const open = reactive({ fw: false, au: false, av: true })
+function toggle(k: 'fw' | 'au' | 'av') {
+  open[k] = !open[k]
 }
 </script>
 
@@ -29,6 +35,9 @@ function launch() {
         <div class="sec-res-h">
           <img :src="SVG + 'Security Question.svg'" alt="" />
           <span>Ressources</span>
+          <button class="sec-toggle" title="Réduire">
+            <span class="sec-arrow up"></span>
+          </button>
         </div>
         <ul>
           <li>
@@ -55,33 +64,58 @@ function launch() {
 
         <!-- Pare-feu : ACTIVÉ -->
         <div class="sec-item">
-          <div class="sec-item-bar">
-            <img :src="SVG + 'Firewall.svg'" alt="" />
+          <div class="sec-item-bar" @click="toggle('fw')">
+            <img class="sec-item-ico" :src="SVG + 'Firewall.svg'" alt="" />
             <span class="sec-item-name">Pare-feu</span>
-            <span class="sec-status on"><i class="orb green"></i> ACTIVÉ</span>
-            <span class="sec-chev">⌄</span>
+            <span class="sec-status on"
+              ><i class="orb green"></i><span class="sec-status-txt">ACTIVÉ</span></span
+            >
+            <span class="sec-sep"></span>
+            <button class="sec-toggle" @click.stop="toggle('fw')">
+              <span class="sec-arrow" :class="open.fw ? 'up' : 'down'"></span>
+            </button>
+          </div>
+          <div v-if="open.fw" class="sec-item-detail">
+            <p>Le Pare-feu Windows est activé et contribue à protéger votre ordinateur.</p>
           </div>
         </div>
 
         <!-- Mises à jour automatiques : VÉRIFIER -->
         <div class="sec-item">
-          <div class="sec-item-bar warn">
-            <img :src="SVG + 'Windows Update.svg'" alt="" />
+          <div class="sec-item-bar warn" @click="toggle('au')">
+            <img class="sec-item-ico" :src="SVG + 'Windows Update.svg'" alt="" />
             <span class="sec-item-name">Mises à jour automatiques</span>
-            <span class="sec-status check"><i class="orb yellow"></i> VÉRIFIER LES PARAMÈTRES</span>
-            <span class="sec-chev">⌄</span>
+            <span class="sec-status check"
+              ><i class="orb yellow"></i
+              ><span class="sec-status-txt">VÉRIFIER LES PARAMÈTRES</span></span
+            >
+            <span class="sec-sep"></span>
+            <button class="sec-toggle" @click.stop="toggle('au')">
+              <span class="sec-arrow" :class="open.au ? 'up' : 'down'"></span>
+            </button>
+          </div>
+          <div v-if="open.au" class="sec-item-detail">
+            <p>
+              Les mises à jour automatiques ne sont peut-être pas configurées. Cliquez sur
+              Recommandations pour les activer.
+            </p>
           </div>
         </div>
 
-        <!-- Protection antivirus : INTROUVABLE (déplié, cliquable → simulateur) -->
+        <!-- Protection antivirus : INTROUVABLE (cliquable → simulateur) -->
         <div class="sec-item danger">
           <div class="sec-item-bar red" title="Cliquez pour ouvrir les recommandations" @click="launch">
-            <img :src="SVG + 'Virus Protection.svg'" alt="" />
+            <img class="sec-item-ico" :src="SVG + 'Virus Protection.svg'" alt="" />
             <span class="sec-item-name">Protection antivirus</span>
-            <span class="sec-status found"><i class="orb red"></i> INTROUVABLE</span>
-            <span class="sec-chev">⌃</span>
+            <span class="sec-status found"
+              ><i class="orb red"></i><span class="sec-status-txt">INTROUVABLE</span></span
+            >
+            <span class="sec-sep"></span>
+            <button class="sec-toggle" @click.stop="toggle('av')">
+              <span class="sec-arrow" :class="open.av ? 'up' : 'down'"></span>
+            </button>
           </div>
-          <div class="sec-item-detail">
+          <div v-if="open.av" class="sec-item-detail">
             <p>
               Windows n'a pas trouvé de logiciel antivirus sur cet ordinateur. Un logiciel antivirus
               contribue à protéger votre ordinateur contre les virus et autres menaces. Cliquez sur
@@ -193,6 +227,9 @@ function launch() {
   width: 20px;
   height: 20px;
 }
+.sec-res-h span {
+  flex: 1;
+}
 .sec-res ul {
   list-style: none;
   margin: 0;
@@ -240,36 +277,42 @@ function launch() {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 10px;
+  padding: 7px 8px 7px 10px;
   background: linear-gradient(to bottom, #eff5ff, #cfe0f6);
+  cursor: pointer;
 }
 .sec-item-bar.warn {
   background: linear-gradient(to bottom, #fff6da, #ffe6a6);
 }
 .sec-item-bar.red {
   background: linear-gradient(to bottom, #ffd9cf, #ff9c86);
-  cursor: pointer;
 }
 .sec-item-bar.red:hover {
   background: linear-gradient(to bottom, #ffe1d9, #ffab97);
 }
-.sec-item-bar img {
+.sec-item-ico {
   width: 22px;
   height: 22px;
+  flex-shrink: 0;
 }
 .sec-item-name {
-  flex: 1;
   font-size: 15px;
   font-weight: 500;
   color: #0a1a3a;
 }
+/* Statut : toujours poussé à droite, aligné à droite */
 .sec-status {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 14px;
   font-weight: bold;
   letter-spacing: 0.3px;
+}
+.sec-status-txt {
+  text-align: right;
+  line-height: 1.05;
 }
 .sec-status.on {
   color: #1f8a1f;
@@ -283,6 +326,7 @@ function launch() {
 .orb {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
   border-radius: 50%;
   box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.35);
 }
@@ -295,18 +339,59 @@ function launch() {
 .orb.red {
   background: radial-gradient(circle at 35% 30%, #ffb0a0, #cc2412 70%);
 }
-.sec-chev {
-  width: 20px;
-  height: 20px;
+
+/* Séparateur + bouton flèche (bulle) */
+.sec-sep {
+  width: 1px;
+  align-self: stretch;
+  margin: 3px 2px;
+  background: rgba(0, 0, 0, 0.14);
+  flex-shrink: 0;
+}
+.sec-toggle {
+  flex-shrink: 0;
+  width: 22px;
+  height: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(0, 0, 0, 0.15);
-  color: #14428b;
-  font-weight: bold;
+  border: 1px solid #9fbce4;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.35));
+  cursor: pointer;
+}
+.sec-toggle:hover {
+  border-color: #6c9bd6;
+  background: linear-gradient(to bottom, #ffffff, #dbe8fb);
+}
+.sec-arrow {
+  display: block;
+  flex-shrink: 0;
+  width: 13px;
+  min-width: 13px;
+  height: 9px;
+  background: #14428b;
+  -webkit-mask: url('/xp/windowsIcons/links.png') no-repeat center / 13px 9px;
+  mask: url('/xp/windowsIcons/links.png') no-repeat center / 13px 9px;
+}
+.sec-arrow.down {
+  transform: rotate(90deg);
+}
+.sec-arrow.up {
+  transform: rotate(-90deg);
+}
+/* Dans le volet Ressources, la flèche est plus discrète */
+.sec-res-h .sec-toggle {
+  border: none;
+  background: transparent;
+  width: 18px;
+  height: 16px;
+}
+.sec-res-h .sec-arrow {
+  background: #15428b;
 }
 
-/* Détail antivirus */
+/* Détail déplié */
 .sec-item-detail {
   padding: 10px 12px 12px;
   background: #fdf6e8;
@@ -315,6 +400,9 @@ function launch() {
 }
 .sec-item-detail p {
   margin: 0 0 8px;
+}
+.sec-item-detail p:last-child {
+  margin-bottom: 0;
 }
 .sec-note {
   color: #555;
