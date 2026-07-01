@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<{ startAfter?: number; duration?: number 
   startAfter: 3000,
   duration: 15000,
 })
+const emit = defineEmits<{ open: [] }>()
 
 const start = ref(false)
 const show = ref(true)
@@ -31,11 +32,16 @@ onBeforeUnmount(() => {
 function dismiss() {
   show.value = false
 }
+// Clic sur la bulle : ouvre le Centre de sécurité, puis se ferme.
+function activate() {
+  emit('open')
+  dismiss()
+}
 </script>
 
 <template>
   <div v-if="start" class="balloon" :class="{ out: !show }">
-    <div class="balloon__container" @click="dismiss">
+    <div class="balloon__container" @click="activate">
       <button class="balloon__close" aria-label="Fermer" @click.stop="dismiss"></button>
       <div class="balloon__header">
         <img class="balloon__header__img" src="/xp/windowsIcons/229(16x16).png" alt="" />
@@ -50,7 +56,7 @@ function dismiss() {
 <style scoped>
 .balloon {
   position: fixed;
-  right: 34px;
+  right: 24px;
   bottom: 38px;
   z-index: 11000;
   opacity: 0;

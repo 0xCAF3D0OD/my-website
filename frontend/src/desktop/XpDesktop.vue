@@ -17,6 +17,10 @@ const { windows, open, taskbarToggle, reset } = useWindows()
 // déplaçable / redimensionnable librement comme sur winamp.org.
 const webampOpen = ref(false)
 
+// Simulateur d'erreurs XP (lancé depuis le Centre de sécurité → Protection antivirus).
+const winErrorOpen = ref(false)
+provide('launchWinError', () => (winErrorOpen.value = true))
+
 const selected = ref<string | null>(null)
 const startOpen = ref(false)
 const clock = ref('')
@@ -69,6 +73,7 @@ const HIDDEN_DESKTOP = new Set([
   'messenger',
   'welcome',
   'webamp',
+  'security',
   // 'controlpanel',
 ])
 const desktopApps = computed(() => apps.filter((a) => !HIDDEN_DESKTOP.has(a.id)))
@@ -357,11 +362,17 @@ function onDesktopClick() {
       </div>
 
       <!-- Bulle de notification façon XP, au-dessus de la zone de notification -->
-      <TrayBalloon />
+      <TrayBalloon @open="openById('security')" />
     </div>
 
     <!-- Assistant -->
     <ClippyAssistant @open="openById" />
+
+    <!-- Simulateur d'erreurs XP (plein écran) + bouton Stop pour l'arrêter -->
+    <div v-if="winErrorOpen" class="winerror">
+      <iframe src="/winerror/index.html" title="Simulateur d'erreurs"></iframe>
+      <button class="winerror-stop" @click="winErrorOpen = false">■ Stop</button>
+    </div>
 
     <!-- Économiseur d'écran : « 3D Pipes » (Three.js). Tout mouvement/touche le ferme
          (l'iframe est pointer-events:none pour laisser passer l'activité vers window). -->
@@ -566,6 +577,39 @@ function onDesktopClick() {
 .tray-clock {
   margin-left: 2px;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+}
+
+/* Simulateur d'erreurs XP : prend tout l'écran ; le bouton Stop reste au-dessus. */
+.winerror {
+  position: fixed;
+  inset: 0;
+  z-index: 100002;
+  background: #000;
+}
+.winerror iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.winerror-stop {
+  position: fixed;
+  top: 10px;
+  right: 12px;
+  z-index: 100003;
+  padding: 6px 16px;
+  font-family: Tahoma, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(to bottom, #e24b3b, #b21f12);
+  border: 1px solid #7a130a;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+.winerror-stop:hover {
+  background: linear-gradient(to bottom, #ef5f4f, #c72719);
 }
 
 .screensaver {

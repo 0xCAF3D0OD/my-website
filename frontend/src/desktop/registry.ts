@@ -13,6 +13,7 @@ import RecycleBinApp from './apps/RecycleBinApp.vue'
 import HelpSupportApp from './apps/HelpSupportApp.vue'
 import WelcomeApp from './apps/WelcomeApp.vue'
 import ControlPanelApp from './apps/ControlPanelApp.vue'
+import SecurityCenterApp from './apps/SecurityCenterApp.vue'
 import { icons } from './icons'
 import { games } from '../games/registry'
 import { pdfViewer } from './pdfViewer'
@@ -193,6 +194,15 @@ export const apps: AppDef[] = [
     component: WelcomeApp,
     w: 560,
     h: 360,
+  },
+  {
+    id: 'security',
+    label: 'Centre de sécurité',
+    title: 'Centre de sécurité Windows',
+    icon: '/xp/WindowsXPIconsSVG/Security Center.svg',
+    component: SecurityCenterApp,
+    w: 640,
+    h: 520,
   },
   {
     id: 'help',
