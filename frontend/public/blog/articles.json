@@ -11,6 +11,23 @@
     "images": ["/blog/photos/exemple.jpg"]
   },
   {
+    "title": "Certification Kubernetes CKA",
+    "date": "29.06.2026",
+    "tags": ["Kubernetes", "CKA"],
+    "body": [
+      "Preparation de la certification Kubernetes CKA, en cours. Prise de connaissance des étapes a accomplir pour passer la certification.",
+      "Visite du site de la certification : https://www.cncf.io/certification/cka/ et du super site de vulgarisation : https://blog.stephane-robert.info/docs/conteneurs/orchestrateurs/kubernetes/certifications/cka/"
+    ]
+  },
+  {
+    "title": "Microcontroller Meshtastic ESP32 Heltec V3 loRA",
+    "date": "29.06.2026",
+    "tags": ["Grafana", "Prometheus", "Arduino"],
+    "body": [
+      "Reception des microcontrollers de la famille Heltec, prise de connaissance du produit Meshtastic ESP32 loRA, installation de Grafana et de Prometheus sur l'appareil"
+    ]
+  },
+  {
     "title": "alloremplacant.ch en production",
     "date": "10.06.2026",
     "tags": ["kubernetes", "gitops"],
