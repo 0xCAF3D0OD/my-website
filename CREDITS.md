@@ -65,6 +65,12 @@ packs d'icônes.
 - Support des **photos** en plus du texte : champ `images` par article, photos déposées
   dans `public/blog/photos/`, affichées en vignettes cliquables (ouverture en grand).
 
+### Centre de sécurité & simulateur d'erreurs
+- La bulle « Votre ordinateur est peut-être en danger » ouvre le **Centre de sécurité
+  Windows** (reproduction fidèle) ; sa pointe est alignée sur l'icône de sécurité.
+- Un clic sur **Protection antivirus (INTROUVABLE)** lance le **simulateur d'erreurs XP**
+  en plein écran (dessine avec des fenêtres d'erreur), arrêtable via un bouton **Stop**.
+
 ---
 
 ## 2. Dépôts GitHub utilisés comme modèle ou source
@@ -75,6 +81,7 @@ packs d'icônes.
 | **modernlivemessenger.com.br** (fourni : `modernlivemessenger.com.br-main.zip`) — clone web MSN (Vite + 7.css) | [Réutilisé] | Les **vraies icônes** de la conversation MSN : barre de format (`change_font`, `select_emoticon`, `select_wink`, `select_background`, `send_nudge`, `editortab`, `arrow`) et barre d'outils (Inviter, Envoyer des fichiers, Webcam, Audio, Activités, Jeux) → `public/xp/msn/chat/`. Structure de la zone d'écriture aussi inspirée de ce dépôt. |
 | **react-xp** — <https://github.com/Cyanoxide/react-xp> (fourni : `react-xp-main.zip`) | [Réutilisé] (Clippy) + [Référence] | **Assistant Clippy** : on a repris son sprite map (`clippy/spritemap.png`) et ses données Microsoft Agent (`clippyAgent.json`) pour une animation fluide. Pas de composant MSN : le reste (composants génériques `XPScrollbars`, `WindowMenu`, `Window`, `Login`) reste une référence pour la suite. |
 | **1j01/pipes** — <https://github.com/1j01/pipes> (fourni : `pipes-master.zip`) — recréation Three.js du « 3D Pipes » de Windows | [Réutilisé] | L'**économiseur d'écran** entier (`public/pipes/`), servi en iframe. MIT. |
+| **winerror-simulator** — <https://github.com/ganoninc/winerror-simulator> (fourni : `winerror-simulator-master.zip`) — simulateur d'erreurs XP | [Réutilisé] | Le simulateur entier (`public/winerror/`), lancé en plein écran depuis le Centre de sécurité. MIT. |
 | **msn-chatbot** (fourni : `msn-chatbot-main.zip`) — backend **Elixir** reliant un vrai client MSN 8.5 (escargot.chat) à ChatGPT | [Référence] | Aucune interface web ; ses captures d'écran ont servi à comprendre la structure de la fenêtre de conversation MSN. |
 | **RebornXP / BINX-XPerience** — <https://github.com/Binxy111/BINX-XPerience> | [Référence] | Étudié en amont pour comprendre l'organisation « bureau XP dans le navigateur » (système de fichiers en arbre, Explorer générique, dossiers = My Computer). A inspiré notre Explorer/dossiers, sans copie de code. |
 
