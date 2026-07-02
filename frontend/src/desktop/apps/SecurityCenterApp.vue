@@ -300,9 +300,11 @@ function toggle(k: 'fw' | 'au' | 'av') {
   font-weight: 500;
   color: #0a1a3a;
 }
-/* Statut : toujours poussé à droite, aligné à droite */
+/* Statut : colonne de largeur fixe → toutes les pastilles alignées (comme XP) */
 .sec-status {
   margin-left: auto;
+  width: 168px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -311,7 +313,7 @@ function toggle(k: 'fw' | 'au' | 'av') {
   letter-spacing: 0.3px;
 }
 .sec-status-txt {
-  text-align: right;
+  text-align: left;
   line-height: 1.05;
 }
 .sec-status.on {
@@ -350,14 +352,16 @@ function toggle(k: 'fw' | 'au' | 'av') {
 }
 .sec-toggle {
   flex-shrink: 0;
-  width: 22px;
-  height: 19px;
+  box-sizing: border-box;
+  width: 21px;
+  height: 21px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #9fbce4;
-  border-radius: 5px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.35));
+  border-radius: 50%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4));
   cursor: pointer;
 }
 .sec-toggle:hover {
